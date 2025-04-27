@@ -7,7 +7,7 @@ public class SpawnPlayerArmature : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P)) // borrar 
         {
             GameObject prefab = Resources.Load<GameObject>(prefabName);
 
