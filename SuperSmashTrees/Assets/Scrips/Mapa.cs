@@ -21,8 +21,8 @@ public class PlatformSpawner : MonoBehaviour
     public Vector3 minEscala = new Vector3(1f, 1f, 1f);
     public Vector3 maxEscala = new Vector3(5f, 5f, 5f);
 
-    [Header("Carpeta de Texturas")]
-    public string carpetaTexturas = "Texturas";  // Nombre de la carpeta en "Resources"
+    [Header("Carpeta de Materiales")]
+    public string carpetaMateriales = "Materiales";  // Carpeta dentro de Resources
 
     private GameObject[] plataformasExistentes;
 
@@ -33,7 +33,7 @@ public class PlatformSpawner : MonoBehaviour
 
     private void CrearPlataformas()
     {
-        int cantidad = UnityEngine.Random.Range(minPlataformas, maxPlataformas + 1);
+        int cantidad = Random.Range(minPlataformas, maxPlataformas + 1);
         Debug.Log($"Creando {cantidad} plataformas...");
 
         plataformasExistentes = new GameObject[cantidad];
@@ -42,72 +42,78 @@ public class PlatformSpawner : MonoBehaviour
         {
             bool posicionValida = false;
             Vector3 posicion = Vector3.zero;
+            int intentos = 0;
+            int maxIntentos = 100;
 
-            // Buscar una posición válida
-            while (!posicionValida)
+            while (!posicionValida && intentos < maxIntentos)
             {
                 posicion = new Vector3(
-                    UnityEngine.Random.Range(minPosicion.x, maxPosicion.x),
-                    UnityEngine.Random.Range(minPosicion.y, maxPosicion.y),
-                    UnityEngine.Random.Range(minPosicion.z, maxPosicion.z)
+                    Random.Range(minPosicion.x, maxPosicion.x),
+                    Random.Range(minPosicion.y, maxPosicion.y),
+                    Random.Range(minPosicion.z, maxPosicion.z)
                 );
 
                 posicionValida = EsPosicionValida(posicion);
+                intentos++;
+            }
+
+            if (!posicionValida)
+            {
+                Debug.LogWarning($"No se pudo encontrar una posición válida para la plataforma {i + 1}. Se omitirá.");
+                continue;
             }
 
             Vector3 rotacion = new Vector3(
-                UnityEngine.Random.Range(minRotacion.x, maxRotacion.x),
-                UnityEngine.Random.Range(minRotacion.y, maxRotacion.y),
-                UnityEngine.Random.Range(minRotacion.z, maxRotacion.z)
+                Random.Range(minRotacion.x, maxRotacion.x),
+                Random.Range(minRotacion.y, maxRotacion.y),
+                Random.Range(minRotacion.z, maxRotacion.z)
             );
 
             Vector3 escala = new Vector3(
-                UnityEngine.Random.Range(minEscala.x, maxEscala.x),
-                UnityEngine.Random.Range(minEscala.y, maxEscala.y),
-                UnityEngine.Random.Range(minEscala.z, maxEscala.z)
+                Random.Range(minEscala.x, maxEscala.x),
+                Random.Range(minEscala.y, maxEscala.y),
+                Random.Range(minEscala.z, maxEscala.z)
             );
 
             GameObject plataforma = Instantiate(plataformaPrefab, posicion, Quaternion.Euler(rotacion));
             plataforma.transform.localScale = escala;
 
-            // Asignar una textura aleatoria
-            AsignarTexturaAleatoria(plataforma);
+            // Asignar un material aleatorio
+            AsignarMaterialAleatorio(plataforma);
 
-            // Almacenar la plataforma creada
             plataformasExistentes[i] = plataforma;
         }
     }
 
-    // Método para verificar que no haya otra plataforma cerca (menos de 5 unidades)
     private bool EsPosicionValida(Vector3 nuevaPosicion)
     {
         foreach (GameObject plataforma in plataformasExistentes)
         {
-            if (plataforma != null && Vector3.Distance(plataforma.transform.position, nuevaPosicion) < 5f)
+            if (plataforma != null && Vector3.Distance(plataforma.transform.position, nuevaPosicion) < 20f)
             {
-                return false;  // Está demasiado cerca de otra plataforma
+                return false;
             }
         }
-        return true;  // Posición válida
+        return true;
     }
 
-    // Método para asignar una textura aleatoria de la carpeta especificada
-    private void AsignarTexturaAleatoria(GameObject plataforma)
+    private void AsignarMaterialAleatorio(GameObject plataforma)
     {
-        // Cargar todas las texturas de la carpeta de recursos
-        Texture[] texturas = Resources.LoadAll<Texture>(carpetaTexturas);
+        Material[] materiales = Resources.LoadAll<Material>(carpetaMateriales);
 
-        if (texturas.Length > 0)
+        if (materiales.Length > 0)
         {
-            // Seleccionar una textura aleatoria
-            Texture texturaAleatoria = texturas[UnityEngine.Random.Range(0, texturas.Length)];
+            Material materialAleatorio = materiales[Random.Range(0, materiales.Length)];
+            Renderer renderer = plataforma.GetComponent<Renderer>();
 
-            // Asignar la textura al material de la plataforma
-            plataforma.GetComponent<Renderer>().material.mainTexture = texturaAleatoria;
+            if (renderer != null)
+            {
+                renderer.material = materialAleatorio;
+            }
         }
         else
         {
-            Debug.LogWarning("No se encontraron texturas en la carpeta especificada.");
+            Debug.LogWarning("No se encontraron materiales en la carpeta especificada.");
         }
     }
 }

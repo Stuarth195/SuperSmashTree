@@ -133,6 +133,10 @@ GameObject:
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
   - component: {fileID: 330585549}
+  - component: {fileID: 330585550}
+  - component: {fileID: 330585551}
+  - component: {fileID: 330585552}
+  - component: {fileID: 330585553}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -274,13 +278,18 @@ MonoBehaviour:
   maxX: 10
   minY: 10
   maxY: 10
-  minZ: 2
-  maxZ: 2
-  minNum: 1
-  maxNum: 1000
-  periodoTotalMinutos: 2
-  intervaloMinSegundos: 20
-  intervaloMaxSegundos: 5
+  minZ: 1
+  maxZ: 1
+  minNum: -100
+  maxNum: 100
+  periodoTotalMinutos: 10
+  intervaloMinSegundos: 10
+  intervaloMaxSegundos: 15
+  tagsADetectar:
+  - Player
+  tiempoDeDesaparicion: 20
+  "tama\xF1oTexto": 0.3
+  velocidadDeCaida: 7
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,13 +305,68 @@ MonoBehaviour:
   plataformaPrefab: {fileID: 783969442}
   minPlataformas: 1
   maxPlataformas: 3
-  minPosicion: {x: -12, y: 3, z: 0}
-  maxPosicion: {x: 12, y: 4.5, z: 0}
-  minRotacion: {x: 0, y: 0, z: -20}
-  maxRotacion: {x: 0, y: 0, z: 20}
+  minPosicion: {x: -12, y: 4.5, z: 0}
+  maxPosicion: {x: 12, y: 5, z: 0}
+  minRotacion: {x: 0, y: 0, z: -10}
+  maxRotacion: {x: 0, y: 0, z: 12}
   minEscala: {x: 1, y: 0.5, z: 1}
   maxEscala: {x: 3, y: 0.3, z: 1}
-  carpetaTexturas: Texturas
+  carpetaMateriales: carpetaTexturas
+--- !u!114 &330585550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49cb06a9323213459e56f146cf6d276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objetoDestino: {fileID: 1535624030}
+  carpeta: Fondos
+--- !u!114 &330585551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaae13d7280242140a2f2f1a91d5e5dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &330585552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 213aeaaffcf393143979c73bc927a82c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumen: 0.3
+--- !u!114 &330585553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb4f3c0462dee04ea64e88268a39ec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  opacidadFondo: 0.6
+  textoPausa: PAUSA
+  "tama\xF1oTexto": 100
+  teclaPausa: 13
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +605,7 @@ PrefabInstance:
     - target: {fileID: 4422386835124225496, guid: 687dbafc2b84b2846b9a4a7a7dae2a7e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: a615f1b63ea1c48469615ab48702090c, type: 2}
+      objectReference: {fileID: 2100000, guid: 6dd6ac78ee256a94e9e31888da531c7d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -610,7 +674,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fb424bcbf49052b42acf39a19e12baeb, type: 2}
+  - {fileID: 2100000, guid: cab6d29747e081d40877605c688636d5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -648,13 +712,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1535624030}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -2.79, y: 1.607846, z: 469}
   m_LocalScale: {x: 1600, y: 900, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &1626957645
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -714,7 +778,7 @@ PrefabInstance:
     - target: {fileID: 4422386835124225496, guid: 687dbafc2b84b2846b9a4a7a7dae2a7e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: a615f1b63ea1c48469615ab48702090c, type: 2}
+      objectReference: {fileID: 2100000, guid: 6dd6ac78ee256a94e9e31888da531c7d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -742,7 +806,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3893294197879345259, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3893294197879345259, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: m_LocalRotation.w
