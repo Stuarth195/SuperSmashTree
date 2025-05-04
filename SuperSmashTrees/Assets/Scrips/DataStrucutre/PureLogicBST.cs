@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class PureLogicBST : MonoBehaviour
 {
-
-    public class Node
+    public class Node : IBinaryTreeNode
     {
         public int Value;
         public Node Left;
@@ -12,15 +11,17 @@ public class PureLogicBST : MonoBehaviour
         public Node(int value)
         {
             Value = value;
-            Left = null;
-            Right = null;
         }
+
+        public int GetValue() => Value;
+        public IBinaryTreeNode GetLeft() => Left;
+        public IBinaryTreeNode GetRight() => Right;
     }
 
     private Node root;
 
-    // Método que se encarga de hacer la inserción de un nuevo nodo en el árbol a nivel solo de la memoria
-    // y no en la escena de Unity.
+    public Node GetRoot() => root;
+
     public void Insert(int value)
     {
         root = InsertRec(root, value);
@@ -28,21 +29,14 @@ public class PureLogicBST : MonoBehaviour
 
     private Node InsertRec(Node root, int value)
     {
-        if (root == null)
-        {
-            root = new Node(value);
-            return root;
-        }
-
+        if (root == null) return new Node(value);
         if (value < root.Value)
             root.Left = InsertRec(root.Left, value);
         else if (value > root.Value)
             root.Right = InsertRec(root.Right, value);
-
         return root;
     }
 
-    // Search for a value in the BST
     public bool Search(int value)
     {
         return SearchRec(root, value);
@@ -50,16 +44,8 @@ public class PureLogicBST : MonoBehaviour
 
     private bool SearchRec(Node root, int value)
     {
-        if (root == null)
-            return false;
-
-        if (root.Value == value)
-            return true;
-
-        if (value < root.Value)
-            return SearchRec(root.Left, value);
-
-        return SearchRec(root.Right, value);
+        if (root == null) return false;
+        if (root.Value == value) return true;
+        return value < root.Value ? SearchRec(root.Left, value) : SearchRec(root.Right, value);
     }
 }
-
