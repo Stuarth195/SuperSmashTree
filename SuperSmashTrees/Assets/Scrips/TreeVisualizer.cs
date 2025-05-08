@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using BinaryTree;
 public class TreeVisualizer : MonoBehaviour
 {
     public TreeNodeFactory nodeFactory; // Referencia al prefab y creación de nodos

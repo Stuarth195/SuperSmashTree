@@ -1,23 +1,9 @@
 using UnityEngine;
+using BinaryTree;
 
 public class PureLogicAVL : MonoBehaviour
 {
-    public class Node : IBinaryTreeNode
-    {
-        public int Value;
-        public Node Left;
-        public Node Right;
-        public int Height = 1;
-
-        public Node(int value)
-        {
-            Value = value;
-        }
-
-        public int GetValue() => Value;
-        public IBinaryTreeNode GetLeft() => Left;
-        public IBinaryTreeNode GetRight() => Right;
-    }
+    BinaryTree.IBinaryTreeNode Pepito { get; set; }
 
     private Node root;
     public Node GetRoot() => root;

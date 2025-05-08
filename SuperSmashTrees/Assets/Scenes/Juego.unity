@@ -136,7 +136,6 @@ GameObject:
   - component: {fileID: 330585550}
   - component: {fileID: 330585551}
   - component: {fileID: 330585552}
-  - component: {fileID: 330585553}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -283,13 +282,13 @@ MonoBehaviour:
   minNum: -100
   maxNum: 100
   periodoTotalMinutos: 10
-  intervaloMinSegundos: 10
-  intervaloMaxSegundos: 15
+  intervaloMinSegundos: 5
+  intervaloMaxSegundos: 7
   tagsADetectar:
   - Player
   tiempoDeDesaparicion: 20
   "tama\xF1oTexto": 0.3
-  velocidadDeCaida: 7
+  velocidadDeCaida: 5
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,10 +304,10 @@ MonoBehaviour:
   plataformaPrefab: {fileID: 783969442}
   minPlataformas: 1
   maxPlataformas: 3
-  minPosicion: {x: -12, y: 4.5, z: 0}
-  maxPosicion: {x: 12, y: 5, z: 0}
-  minRotacion: {x: 0, y: 0, z: -10}
-  maxRotacion: {x: 0, y: 0, z: 12}
+  minPosicion: {x: -12, y: 4, z: 0}
+  maxPosicion: {x: 12, y: 4.5, z: 0}
+  minRotacion: {x: 0, y: 0, z: -5}
+  maxRotacion: {x: 0, y: 0, z: 5}
   minEscala: {x: 1, y: 0.5, z: 1}
   maxEscala: {x: 3, y: 0.3, z: 1}
   carpetaMateriales: carpetaTexturas
@@ -351,22 +350,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumen: 0.3
---- !u!114 &330585553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fb4f3c0462dee04ea64e88268a39ec7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  opacidadFondo: 0.6
-  textoPausa: PAUSA
-  "tama\xF1oTexto": 100
-  teclaPausa: 13
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
