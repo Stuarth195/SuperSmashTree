@@ -1,15 +1,18 @@
 using UnityEngine;
 using BinaryTree;
 
-public class PureLogicBST : MonoBehaviour
+public class PureLogicBST : IBinaryTree
 {
     private Node root;
-
-    public Node GetRoot() => root;
 
     public void Insert(int value)
     {
         root = InsertRec(root, value);
+    }
+
+    public IBinaryTreeNode GetRoot()
+    {
+        return root;
     }
 
     private Node InsertRec(Node root, int value)

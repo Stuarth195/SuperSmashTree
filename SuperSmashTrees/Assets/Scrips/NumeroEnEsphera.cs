@@ -24,7 +24,10 @@ public class NumeroEnEsfera : MonoBehaviour
         {
             Debug.Log($"[COLISIÓN] '{other.name}' con tag '{other.tag}' tocó esfera {numero}");
 
-            // Reproducir el sonido en el mismo momento que se destruye
+            // Enviar el número al GameManager
+            GameManager.Instance.PlayerTouchedNumber(other.tag, numero);
+
+            // Reproducir el sonido
             if (sonidoDesaparicion != null)
                 AudioSource.PlayClipAtPoint(sonidoDesaparicion, transform.position);
 

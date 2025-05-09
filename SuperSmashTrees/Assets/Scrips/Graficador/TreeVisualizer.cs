@@ -84,4 +84,13 @@ public class TreeVisualizer : MonoBehaviour
         line.startColor = Color.black;
         line.endColor = Color.black;
     }
+
+    public void ClearVisualization()
+    {
+        // Elimina todos los objetos hijos del visualizador (nodos y líneas)
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 }

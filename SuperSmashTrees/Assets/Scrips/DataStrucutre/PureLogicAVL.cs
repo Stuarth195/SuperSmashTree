@@ -1,16 +1,19 @@
 using UnityEngine;
 using BinaryTree;
 
-public class PureLogicAVL : MonoBehaviour
-{
-    BinaryTree.IBinaryTreeNode Pepito { get; set; }
 
+public class PureLogicAVL : IBinaryTree
+{
     private Node root;
-    public Node GetRoot() => root;
 
     public void Insert(int value)
     {
         root = InsertRec(root, value);
+    }
+
+    public IBinaryTreeNode GetRoot()
+    {
+        return root;
     }
 
     private Node InsertRec(Node node, int value)
