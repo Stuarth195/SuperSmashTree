@@ -1405,7 +1405,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Preciona Enter
+  m_text: 'Presiona Enter
 
 '
   m_isRightToLeft: 0
@@ -2228,7 +2228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 393764844836338496, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: m_text
-      value: 'Preciona Enter para comenzar
+      value: 'Presiona Enter para comenzar
 
 '
       objectReference: {fileID: 0}
@@ -2251,6 +2251,10 @@ PrefabInstance:
     - target: {fileID: 393807920337415562, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 393855801469818430, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
+      propertyPath: m_text
+      value: Cargando....
       objectReference: {fileID: 0}
     - target: {fileID: 393894333680531994, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -2385,12 +2389,22 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2804409594499520442, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
+      propertyPath: m_text
+      value: 'Salir
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804409594499520442, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 2812137389545748940, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078808710804252172, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
+      propertyPath: m_text
+      value: Mas
       objectReference: {fileID: 0}
     - target: {fileID: 6078808710804252172, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -2525,6 +2539,15 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2083592549}
     - targetCorrespondingSourceObject: {fileID: 352711673037923416, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 353319853915849886, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 6183335970694796328, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2844191079685055902, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 352915749616479018, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
