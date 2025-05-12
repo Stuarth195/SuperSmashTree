@@ -5,6 +5,8 @@ public class NumeroEnEsfera : MonoBehaviour
 {
     public int numero;
     public List<string> tagsPermitidos;
+    private string ultimoTagQueToco; // Variable para almacenar el tag
+
     public float tiempoDeDesaparicion;
 
     private AudioClip sonidoDesaparicion;
@@ -18,24 +20,23 @@ public class NumeroEnEsfera : MonoBehaviour
         Invoke(nameof(DestruirSinColision), tiempoDeDesaparicion);
     }
 
-    private void OnTriggerEnter(Collider other)
+
+private void OnTriggerEnter(Collider other)
+{
+    if (tagsPermitidos.Contains(other.tag))
     {
-        if (tagsPermitidos.Contains(other.tag))
-        {
-            Debug.Log($"[COLISIÓN] '{other.name}' con tag '{other.tag}' tocó esfera {numero}");
+        Debug.Log($"[COLISIÓN] '{other.name}' con tag '{other.tag}' tocó esfera {numero}");
+        
+        ultimoTagQueToco = other.tag; // Guardar el tag en la variable
+        
+        GameManager.Instance.PlayerTouchedNumber(ultimoTagQueToco, numero);
 
-            // Enviar el número al GameManager
-            GameManager.Instance.PlayerTouchedNumber(other.tag, numero);
+        if (sonidoDesaparicion != null)
+            AudioSource.PlayClipAtPoint(sonidoDesaparicion, transform.position);
 
-            // Reproducir el sonido
-            if (sonidoDesaparicion != null)
-                AudioSource.PlayClipAtPoint(sonidoDesaparicion, transform.position);
-
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
-
-    private void DestruirSinColision()
+}    private void DestruirSinColision()
     {
         Destroy(gameObject);
     }

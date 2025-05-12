@@ -6,17 +6,48 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private TreeVisualizer[] visualizers; // Visualizadores para cada jugador
-    private IBinaryTree[] playerTrees; // Árbol actual de cada jugador
+    public IBinaryTree[] playerTrees; // Árbol actual de cada jugador
     private string currentChallenge; // Desafío actual
     private int requiredLevels; // Niveles requeridos para el desafío
     private string currentTreeType; // Tipo de árbol del desafío actual ("BST" o "AVL")
-
+    public string Tag; 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
+    //Método para inicializar el juego y los árboles
+private int IndiceTag(string tag)
+{
+    // 1. Verificar si el tag es nulo o vacío
+    if (string.IsNullOrEmpty(tag))
+    {
+        return 0;
+    }
 
+    // 2. Obtener el último carácter
+    char ultimoCaracter = tag[tag.Length - 1];
+
+    // 3. Verificar si es un dígito
+    if (char.IsDigit(ultimoCaracter))
+    {
+        // 4. Convertir el carácter a número
+        int numero = int.Parse(ultimoCaracter.ToString());
+        return numero;
+    }
+    else
+    {
+        // 5. Si no es un dígito, retornar 0
+        return 0;
+    }
+}
+
+public void InsertAux()
+{
+
+
+
+}
     private void Start()
     {
         // Inicializar árboles y visualizadores
@@ -31,7 +62,9 @@ public class GameManager : MonoBehaviour
         // Generar el primer desafío
         GenerateChallenge();
     }
-
+    
+    //Es solo un código de test para ver que si se logra insertar un nodo en el árbol
+    
     public void PlayerTouchedNumber(string playerTag, int number)
     {
         // Determinar el índice del jugador según el tag
@@ -45,10 +78,12 @@ public class GameManager : MonoBehaviour
         visualizers[playerIndex].VisualizeTree(playerTrees[playerIndex].GetRoot());
 
         // Verificar si el jugador ha completado el desafío
+        //Eb este método se puede agregar el llamado al método que va a agregar los puntos a los jugadores
         if (VerifyChallenge(playerIndex))
         {
             Debug.Log($"¡Jugador {playerIndex + 1} completó el desafío!");
             ResetTrees();
+            // finishChallenge();
             GenerateChallenge();
         }
     }

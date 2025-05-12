@@ -33,13 +33,13 @@ public abstract class ObjectFactory : MonoBehaviour
         GameObject newObject = Instantiate(objectPrefab, position, Quaternion.identity, transform); // Opcional: lo hace hijo de este GameObject
 
         // Asignar el tag
-        if (!string.IsNullOrEmpty(objectTag))
+        if (!string.IsNullOrEmpty(objectTag) && GameObject.FindGameObjectsWithTag(objectTag).Length > 0)
         {
             newObject.tag = objectTag;
         }
         else
         {
-            Debug.LogWarning("Tag no asignado en ObjectFactory. Usando tag por defecto.", this);
+            Debug.LogWarning($"Tag '{objectTag}' no está definido. Usando tag por defecto.", this);
         }
 
         // Configuración adicional (para sobrescribir en clases hijas)

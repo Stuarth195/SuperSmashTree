@@ -6,6 +6,7 @@ public class TreeVisualizer : MonoBehaviour
     public float horizontalSpacing = 3f;
     public float verticalSpacing = 2f;
 
+
     private Transform nodesParent;
 
     private void Awake()
@@ -13,8 +14,13 @@ public class TreeVisualizer : MonoBehaviour
         // Crea un contenedor para todos los nodos visuales
         GameObject container = new GameObject("VisualizedNodes");
         nodesParent = container.transform;
-    }
 
+        // Asegúrate de que el contenedor esté en la escena activa
+        nodesParent.SetParent(this.transform, false);
+
+        // Establece la posición inicial del contenedor
+        nodesParent.position = new Vector3(0, 5, 0); // Cambia esta posición según sea necesario
+    }
     /// <summary>
     /// Visualiza el árbol completo dado su nodo raíz.
     /// </summary>

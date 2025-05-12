@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - CinemachineTarget
+  - Player1
   layers:
   - Default
   - TransparentFX
@@ -43,6 +45,9 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 3161361711
+    locked: 0
+  - name: Default
+    uniqueID: 913272989
     locked: 0
   m_RenderingLayers:
   - Default
