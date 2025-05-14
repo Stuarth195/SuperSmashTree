@@ -1,23 +1,26 @@
 using UnityEngine;
 
-public class PlayerCounter : MonoBehaviour
+// PlayerCounter.cs (modificado)
+namespace PlayerC
 {
-    [Tooltip("Lista de tags a revisar para contar jugadores")]
-    public string[] playerTags;
-
-    private int totalPlayers = 0;
-
-    void Update()
+    public class PlayerCounter : MonoBehaviour
     {
-        totalPlayers = 0;
+        [Tooltip("Tags de jugadores (ej: Player1, Player2)")]
+        public string[] playerTags;
+        private int totalPlayers = 0;
 
-        foreach (string tag in playerTags)
+        // Método público para forzar un recuento
+        public void ActualizarConteo()
         {
-            GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(tag);
-            totalPlayers += taggedObjects.Length;
+            totalPlayers = 0;
+            foreach (string tag in playerTags)
+            {
+                GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(tag);
+                totalPlayers += taggedObjects.Length;
+            }
+            Debug.Log($"Total de jugadores: {totalPlayers}");
         }
 
-        Debug.Log($"Total de jugadores con los tags seleccionados: {totalPlayers}");
+        public int NumJugadores() => totalPlayers;
     }
 }
-
