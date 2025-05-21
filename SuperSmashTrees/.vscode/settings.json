@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "SuperSmashTrees.sln"
+    "dotnet.defaultSolution": "SuperSmashTrees.sln",
+    "git.ignoreLimitWarning": true
 }
