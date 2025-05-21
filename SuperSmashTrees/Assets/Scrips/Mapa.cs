@@ -9,20 +9,27 @@ public class PlatformSpawner : MonoBehaviour
     public int minPlataformas = 1;
     public int maxPlataformas = 4;
 
-    [Header("Rango de Posición")]
+    [Header("Rango de Posición (X, Y, Z)")]
     public Vector3 minPosicion = new Vector3(-10f, 0f, -10f);
     public Vector3 maxPosicion = new Vector3(10f, 0f, 10f);
 
-    [Header("Rango de Rotación")]
-    public Vector3 minRotacion = new Vector3(0f, 0f, 0f);
-    public Vector3 maxRotacion = new Vector3(0f, 360f, 0f);
+    [Header("Offset entre Plataformas (X ±, Y ±)")]
+    public float offsetX = 10f;
+    public float offsetY = 2f;
 
-    [Header("Rango de Escala (Tamaño)")]
+    [Header("Distancia mínima entre plataformas")]
+    public float distanciaMinima = 5f;
+
+    [Header("Rango de Rotación")]
+    public Vector3 minRotacion = new Vector3(0f, 0f, -20f);
+    public Vector3 maxRotacion = new Vector3(0f, 360f, 20f);
+
+    [Header("Rango de Escala")]
     public Vector3 minEscala = new Vector3(1f, 1f, 1f);
     public Vector3 maxEscala = new Vector3(5f, 5f, 5f);
 
-    [Header("Carpeta de Materiales")]
-    public string carpetaMateriales = "Materiales";  // Carpeta dentro de Resources
+    [Header("Carpeta de Materiales (Resources)")]
+    public string carpetaMateriales = "Materiales";
 
     private GameObject[] plataformasExistentes;
 
@@ -38,22 +45,53 @@ public class PlatformSpawner : MonoBehaviour
 
         plataformasExistentes = new GameObject[cantidad];
 
-        for (int i = 0; i < cantidad; i++)
+        Vector3 ultimaPosicion = Vector3.zero;
+        bool posicionValida = false;
+        int intentos = 0;
+        int maxIntentos = 1000;
+
+        // Primera plataforma
+        while (!posicionValida && intentos < maxIntentos)
         {
-            bool posicionValida = false;
-            Vector3 posicion = Vector3.zero;
-            int intentos = 0;
-            int maxIntentos = 100;
+            ultimaPosicion = new Vector3(
+                Random.Range(minPosicion.x, maxPosicion.x),
+                Random.Range(minPosicion.y, maxPosicion.y),
+                Random.Range(minPosicion.z, maxPosicion.z)
+            );
+
+            posicionValida = EsPosicionValida(ultimaPosicion);
+            intentos++;
+        }
+
+        if (!posicionValida)
+        {
+            Debug.LogWarning("No se pudo encontrar una posición válida para la primera plataforma.");
+            return;
+        }
+
+        GameObject primeraPlataforma = CrearPlataforma(ultimaPosicion);
+        plataformasExistentes[0] = primeraPlataforma;
+
+        // Siguientes plataformas
+        for (int i = 1; i < cantidad; i++)
+        {
+            posicionValida = false;
+            intentos = 0;
+            Vector3 nuevaPosicion = Vector3.zero;
 
             while (!posicionValida && intentos < maxIntentos)
             {
-                posicion = new Vector3(
-                    Random.Range(minPosicion.x, maxPosicion.x),
-                    Random.Range(minPosicion.y, maxPosicion.y),
-                    Random.Range(minPosicion.z, maxPosicion.z)
+                float deltaX = Random.Range(-offsetX, offsetX);
+                float deltaY = Random.Range(-offsetY, offsetY);
+                float nuevaZ = Random.Range(minPosicion.z, maxPosicion.z);
+
+                nuevaPosicion = new Vector3(
+                    Mathf.Clamp(ultimaPosicion.x + deltaX, minPosicion.x, maxPosicion.x),
+                    Mathf.Clamp(ultimaPosicion.y + deltaY, minPosicion.y, maxPosicion.y),
+                    nuevaZ
                 );
 
-                posicionValida = EsPosicionValida(posicion);
+                posicionValida = EsPosicionValida(nuevaPosicion);
                 intentos++;
             }
 
@@ -63,33 +101,37 @@ public class PlatformSpawner : MonoBehaviour
                 continue;
             }
 
-            Vector3 rotacion = new Vector3(
-                Random.Range(minRotacion.x, maxRotacion.x),
-                Random.Range(minRotacion.y, maxRotacion.y),
-                Random.Range(minRotacion.z, maxRotacion.z)
-            );
-
-            Vector3 escala = new Vector3(
-                Random.Range(minEscala.x, maxEscala.x),
-                Random.Range(minEscala.y, maxEscala.y),
-                Random.Range(minEscala.z, maxEscala.z)
-            );
-
-            GameObject plataforma = Instantiate(plataformaPrefab, posicion, Quaternion.Euler(rotacion));
-            plataforma.transform.localScale = escala;
-
-            // Asignar un material aleatorio
-            AsignarMaterialAleatorio(plataforma);
-
-            plataformasExistentes[i] = plataforma;
+            GameObject nuevaPlataforma = CrearPlataforma(nuevaPosicion);
+            plataformasExistentes[i] = nuevaPlataforma;
+            ultimaPosicion = nuevaPosicion;
         }
+    }
+
+    private GameObject CrearPlataforma(Vector3 posicion)
+    {
+        Vector3 rotacion = new Vector3(
+            Random.Range(minRotacion.x, maxRotacion.x),
+            Random.Range(minRotacion.y, maxRotacion.y),
+            Random.Range(minRotacion.z, maxRotacion.z)
+        );
+
+        Vector3 escala = new Vector3(
+            Random.Range(minEscala.x, maxEscala.x),
+            Random.Range(minEscala.y, maxEscala.y),
+            Random.Range(minEscala.z, maxEscala.z)
+        );
+
+        GameObject plataforma = Instantiate(plataformaPrefab, posicion, Quaternion.Euler(rotacion));
+        plataforma.transform.localScale = escala;
+        AsignarMaterialAleatorio(plataforma);
+        return plataforma;
     }
 
     private bool EsPosicionValida(Vector3 nuevaPosicion)
     {
         foreach (GameObject plataforma in plataformasExistentes)
         {
-            if (plataforma != null && Vector3.Distance(plataforma.transform.position, nuevaPosicion) < 20f)
+            if (plataforma != null && Vector3.Distance(plataforma.transform.position, nuevaPosicion) < distanciaMinima)
             {
                 return false;
             }

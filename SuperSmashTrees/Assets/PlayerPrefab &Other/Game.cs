@@ -9,5 +9,5 @@ public class Game : MonoBehaviour
         // Asignar un color aleatorio
         Color randomColor = new Color(Random.value, Random.value, Random.value);
         p.ChangeColor(randomColor);
-    }
+    }
 }

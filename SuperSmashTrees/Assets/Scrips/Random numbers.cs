@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class RandomNumberSphereSpawner : MonoBehaviour
 {

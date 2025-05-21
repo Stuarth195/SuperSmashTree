@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DLLForUnityDB;
 
 public class SistemaPuntajes
 {
@@ -31,11 +32,9 @@ public class SistemaPuntajes
         if (puntajesJugadores.ContainsKey(nombreJugador))
         {
             puntajesJugadores[nombreJugador] += puntos;
-            Console.WriteLine($"Se añadieron {puntos} puntos a {nombreJugador}. Puntaje total: {puntajesJugadores[nombreJugador]}");
         }
         else
         {
-            Console.WriteLine($"El jugador {nombreJugador} no está registrado.");
         }
     }
 
@@ -45,12 +44,9 @@ public class SistemaPuntajes
         if (puntajesJugadores.ContainsKey(nombreJugador))
         {
             puntajesJugadores[nombreJugador] = Math.Max(0, puntajesJugadores[nombreJugador] - puntos);
-            Console.WriteLine($"Se restaron {puntos} puntos a {nombreJugador}. Puntaje total: {puntajesJugadores[nombreJugador]}");
+            
         }
-        else
-        {
-            Console.WriteLine($"El jugador {nombreJugador} no está registrado.");
-        }
+        
     }
 
     // Obtener el puntaje actual de un jugador
@@ -71,6 +67,6 @@ public class SistemaPuntajes
         {
             puntajesJugadores[jugador] = 0;
         }
-        Console.WriteLine("Todos los puntajes han sido reiniciados a cero.");
+        // Reiniciar el puntaje de cada jugador a cero
     }
 }

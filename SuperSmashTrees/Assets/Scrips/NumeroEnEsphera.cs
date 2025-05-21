@@ -29,7 +29,7 @@ private void OnTriggerEnter(Collider other)
         
         ultimoTagQueToco = other.tag; // Guardar el tag en la variable
         
-        GameManager.Instance.PlayerTouchedNumber(ultimoTagQueToco, numero);
+        //GameManager.Instance.PlayerTouchedNumber(ultimoTagQueToco, numero);
 
         if (sonidoDesaparicion != null)
             AudioSource.PlayClipAtPoint(sonidoDesaparicion, transform.position);

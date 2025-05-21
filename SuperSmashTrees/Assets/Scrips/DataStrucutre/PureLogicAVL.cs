@@ -1,80 +1,108 @@
+using System;
 using UnityEngine;
-using BinaryTree;
+using Nodos;
 
-
-public class PureLogicAVL : IBinaryTree
+namespace LogicTree
 {
-    private Node root;
-
-    public void Insert(int value)
+    public class PureLogicAVL
     {
-        root = InsertRec(root, value);
-    }
-
-    public IBinaryTreeNode GetRoot()
-    {
-        return root;
-    }
-
-    private Node InsertRec(Node node, int value)
-    {
-        if (node == null) return new Node(value);
-
-        if (value < node.Value)
-            node.Left = InsertRec(node.Left, value);
-        else if (value > node.Value)
-            node.Right = InsertRec(node.Right, value);
-        else return node;
-
-        node.Height = 1 + Mathf.Max(GetHeight(node.Left), GetHeight(node.Right));
-        int balance = GetBalance(node);
-
-        if (balance > 1 && value < node.Left.Value)
-            return RightRotate(node);
-        if (balance < -1 && value > node.Right.Value)
-            return LeftRotate(node);
-        if (balance > 1 && value > node.Left.Value)
+        // Insertar valor en árbol AVL y retornar nueva raíz
+        public Nodo Insert(Nodo root, int value)
         {
-            node.Left = LeftRotate(node.Left);
-            return RightRotate(node);
+            if (root == null)
+                return new Nodo(value);
+
+            if (value < root.value)
+                root.Left = Insert(root.Left, value);
+            else if (value > root.value)
+                root.Right = Insert(root.Right, value);
+            else // valores duplicados no permitidos
+                return root;
+
+            // Actualizar altura del nodo actual
+            root.Height = 1 + Math.Max(GetHeight(root.Left), GetHeight(root.Right));
+
+            // Obtener factor de balance
+            int balance = GetBalance(root);
+
+            // Rotaciones para balancear el árbol
+
+            // Caso Izquierda Izquierda
+            if (balance > 1 && value < root.Left.value)
+                return RightRotate(root);
+
+            // Caso Derecha Derecha
+            if (balance < -1 && value > root.Right.value)
+                return LeftRotate(root);
+
+            // Caso Izquierda Derecha
+            if (balance > 1 && value > root.Left.value)
+            {
+                root.Left = LeftRotate(root.Left);
+                return RightRotate(root);
+            }
+
+            // Caso Derecha Izquierda
+            if (balance < -1 && value < root.Right.value)
+            {
+                root.Right = RightRotate(root.Right);
+                return LeftRotate(root);
+            }
+
+            // Retornar raíz sin cambios si ya está balanceado
+            return root;
         }
-        if (balance < -1 && value < node.Right.Value)
+
+        // Obtener altura segura (si nodo es null, 0)
+        private int GetHeight(Nodo nodo)
         {
-            node.Right = RightRotate(node.Right);
-            return LeftRotate(node);
+            if (nodo == null)
+                return 0;
+            return nodo.Height;
         }
 
-        return node;
-    }
+        // Calcular factor de balance del nodo
+        private int GetBalance(Nodo nodo)
+        {
+            if (nodo == null)
+                return 0;
+            return GetHeight(nodo.Left) - GetHeight(nodo.Right);
+        }
 
-    private int GetHeight(Node node) => node?.Height ?? 0;
-    private int GetBalance(Node node) => GetHeight(node.Left) - GetHeight(node.Right);
+        // Rotación a la derecha
+        private Nodo RightRotate(Nodo y)
+        {
+            Nodo x = y.Left;
+            Nodo T2 = x.Right;
 
-    private Node RightRotate(Node y)
-    {
-        Node x = y.Left;
-        Node T2 = x.Right;
+            // Rotación
+            x.Right = y;
+            y.Left = T2;
 
-        x.Right = y;
-        y.Left = T2;
+            // Actualizar alturas
+            y.Height = 1 + Math.Max(GetHeight(y.Left), GetHeight(y.Right));
+            x.Height = 1 + Math.Max(GetHeight(x.Left), GetHeight(x.Right));
 
-        y.Height = Mathf.Max(GetHeight(y.Left), GetHeight(y.Right)) + 1;
-        x.Height = Mathf.Max(GetHeight(x.Left), GetHeight(x.Right)) + 1;
+            // Retornar nueva raíz
+            return x;
+        }
 
-        return x;
-    }
+        // Rotación a la izquierda
+        private Nodo LeftRotate(Nodo x)
+        {
+            Nodo y = x.Right;
+            Nodo T2 = y.Left;
 
-    private Node LeftRotate(Node x)
-    {
-        Node y = x.Right;
-        Node T2 = y.Left;
+            // Rotación
+            y.Left = x;
+            x.Right = T2;
 
-        y.Left = x;
-        x.Right = T2;
+            // Actualizar alturas
+            x.Height = 1 + Math.Max(GetHeight(x.Left), GetHeight(x.Right));
+            y.Height = 1 + Math.Max(GetHeight(y.Left), GetHeight(y.Right));
 
-        x.Height = Mathf.Max(GetHeight(x.Left), GetHeight(x.Right)) + 1;
-        y.Height = Mathf.Max(GetHeight(y.Left), GetHeight(y.Right)) + 1;
-
-        return y;
+            // Retornar nueva raíz
+            return y;
+        }
     }
 }

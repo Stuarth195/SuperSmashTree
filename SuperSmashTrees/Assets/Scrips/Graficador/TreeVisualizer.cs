@@ -1,5 +1,6 @@
 using UnityEngine;
-using BinaryTree;
+using Nodos;
+
 public class TreeVisualizer : MonoBehaviour
 {
     public TreeNodeFactory nodeFactory; // Referencia al prefab y creación de nodos
@@ -24,7 +25,7 @@ public class TreeVisualizer : MonoBehaviour
     /// <summary>
     /// Visualiza el árbol completo dado su nodo raíz.
     /// </summary>
-    public void VisualizeTree(IBinaryTreeNode root)
+    public void VisualizeTree(Nodo root)
     {
         // Limpia la escena de visualizaciones anteriores
         foreach (Transform child in nodesParent)
@@ -41,7 +42,7 @@ public class TreeVisualizer : MonoBehaviour
     /// <summary>
     /// Método recursivo para visualizar cada nodo.
     /// </summary>
-    private void VisualizeRecursive(IBinaryTreeNode node, Vector3 position, int depth, int direction)
+    private void VisualizeRecursive(Nodo node, Vector3 position, int depth, int direction)
     {
         if (node == null) return;
 
@@ -53,24 +54,24 @@ public class TreeVisualizer : MonoBehaviour
         position.y = -depth * verticalSpacing;
 
         // Crea el nodo visual
-        GameObject nodeVisual = nodeFactory.CreateTreeNode(position, node.GetValue());
+        GameObject nodeVisual = nodeFactory.CreateTreeNode(position, node.value);
 
         nodeVisual.transform.SetParent(nodesParent, false);
 
         // Dibuja la rama hacia el hijo izquierdo
-        if (node.GetLeft() != null)
+        if (node.Left != null)
         {
             Vector3 leftPos = position + new Vector3(-offset, -verticalSpacing, 0);
             DrawLine(position, leftPos);
-            VisualizeRecursive(node.GetLeft(), leftPos, depth + 1, -1);
+            VisualizeRecursive(node.Left, leftPos, depth + 1, -1);
         }
 
         // Dibuja la rama hacia el hijo derecho
-        if (node.GetRight() != null)
+        if (node.Right != null)
         {
             Vector3 rightPos = position + new Vector3(offset, -verticalSpacing, 0);
             DrawLine(position, rightPos);
-            VisualizeRecursive(node.GetRight(), rightPos, depth + 1, 1);
+            VisualizeRecursive(node.Right, rightPos, depth + 1, 1);
         }
     }
 

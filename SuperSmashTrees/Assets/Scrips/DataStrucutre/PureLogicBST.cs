@@ -1,39 +1,36 @@
 using UnityEngine;
-using BinaryTree;
+using Nodos;
 
-public class PureLogicBST : IBinaryTree
+public class PureLogicBST 
 {
-    private Node root;
-
-    public void Insert(int value)
+    // Método para insertar un nuevo nodo en el árbol
+    private Nodo InsertRec(Nodo root, int value)
     {
-        root = InsertRec(root, value);
-    }
-
-    public IBinaryTreeNode GetRoot()
-    {
-        return root;
-    }
-
-    private Node InsertRec(Node root, int value)
-    {
-        if (root == null) return new Node(value);
-        if (value < root.Value)
+        if (root == null) return new Nodo(value);
+        if (value == root.value)
+            return root; // No duplicados
+        if (value < root.value)
             root.Left = InsertRec(root.Left, value);
-        else if (value > root.Value)
+        else if (value > root.value)
             root.Right = InsertRec(root.Right, value);
         return root;
     }
-
-    public bool Search(int value)
+    // Método para buscar un valor en el árbol
+    public bool Search(Nodo root, int value)
     {
         return SearchRec(root, value);
     }
-
-    private bool SearchRec(Node root, int value)
+    // Método recursivo para buscar un valor
+    private bool SearchRec(Nodo root, int value)
     {
-        if (root == null) return false;
-        if (root.Value == value) return true;
-        return value < root.Value ? SearchRec(root.Left, value) : SearchRec(root.Right, value);
+        if (root == null)
+            return false; 
+        if (root.value == value)
+            return true;
+        if (value < root.value)
+        return SearchRec(root.Left, value);
+        else
+        return SearchRec(root.Right, value);
+
     }
 }

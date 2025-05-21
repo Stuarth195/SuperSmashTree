@@ -12,6 +12,7 @@ TagManager:
   - Player5
   - Limite
   - A
+  - Plataforma
   layers:
   - Default
   - TransparentFX

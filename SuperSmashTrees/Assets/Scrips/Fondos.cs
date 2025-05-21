@@ -1,12 +1,11 @@
 using UnityEngine;
-using System.IO;
 
 public class ImagenAleatoria3D : MonoBehaviour
 {
     [Header("Objeto 3D al que se cambiará la textura (ej: cubo)")]
     public GameObject objetoDestino;
 
-    [Header("Carpeta relativa dentro de Assets (ej: 'Fondos')")]
+    [Header("Carpeta dentro de Resources (ej: 'Fondos')")]
     public string carpeta = "Fondos";
 
     void Start()
@@ -17,39 +16,23 @@ public class ImagenAleatoria3D : MonoBehaviour
             return;
         }
 
-        string rutaAbsoluta = Path.Combine(Application.dataPath, carpeta);
+        // Carga todas las texturas dentro de Resources/carpeta
+        Texture2D[] texturas = Resources.LoadAll<Texture2D>(carpeta);
 
-        if (!Directory.Exists(rutaAbsoluta))
+        if (texturas.Length == 0)
         {
-            Debug.LogError("No se encontró la carpeta: " + rutaAbsoluta);
+            Debug.LogError($"No se encontraron texturas en Resources/{carpeta}");
             return;
         }
 
-        string[] extensiones = { "*.png", "*.jpg", "*.jpeg", "*.bmp" };
-        var archivos = new System.Collections.Generic.List<string>();
-
-        foreach (string ext in extensiones)
-        {
-            archivos.AddRange(Directory.GetFiles(rutaAbsoluta, ext));
-        }
-
-        if (archivos.Count == 0)
-        {
-            Debug.LogError("No se encontraron imágenes en la carpeta: " + rutaAbsoluta);
-            return;
-        }
-
-        // Elegir imagen aleatoria
-        string archivoSeleccionado = archivos[Random.Range(0, archivos.Count)];
-        byte[] datos = File.ReadAllBytes(archivoSeleccionado);
-        Texture2D textura = new Texture2D(2, 2);
-        textura.LoadImage(datos);
+        // Selecciona una textura aleatoria
+        Texture2D texturaSeleccionada = texturas[Random.Range(0, texturas.Length)];
 
         // Asignar textura al material del objeto
         Renderer renderer = objetoDestino.GetComponent<Renderer>();
         if (renderer != null)
         {
-            renderer.material.mainTexture = textura;
+            renderer.material.mainTexture = texturaSeleccionada;
         }
         else
         {

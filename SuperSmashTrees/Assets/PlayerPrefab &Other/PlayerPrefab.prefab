@@ -206,12 +206,9 @@ GameObject:
   - component: {fileID: -4472597160913118672}
   - component: {fileID: 6214367190613100869}
   - component: {fileID: 8311190244969228983}
-  - component: {fileID: -8006503411920607603}
-  - component: {fileID: -697940118899162338}
-  - component: {fileID: 8731687015633122200}
   m_Layer: 0
   m_Name: PlayerPrefab
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -287,7 +284,7 @@ MonoBehaviour:
   upDownRange: 60
   PhysicsMovementForce: 100
   PhysicsMovementTorque: 10
-  PhysicsJumpForce: 15
+  PhysicsJumpForce: 10
   leftStick: {x: 0, y: 0}
   rightStick: {x: 0, y: 0}
   controller: {fileID: 6214367190613100869}
@@ -339,48 +336,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   canPush: 1
   strength: 1.1
---- !u!114 &-8006503411920607603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5062027600983921548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2998d5b8fade6f459aeebee8ca376a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseTag: Player
---- !u!114 &-697940118899162338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5062027600983921548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b24856617990be448fa9ffadc2c29fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8731687015633122200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5062027600983921548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17fc0cd1a78f8ca4a955c88e1103f7ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alturaMinimaY: -20
-  tiempoDeEspera: 0.5
-  posicionDeRespawn: {x: 0, y: 5, z: 2}
-  camaraUI: {fileID: 0}
-  mensajeOffset: {x: -10, y: 110}
 --- !u!1 &8315350320255264827
 GameObject:
   m_ObjectHideFlags: 0
