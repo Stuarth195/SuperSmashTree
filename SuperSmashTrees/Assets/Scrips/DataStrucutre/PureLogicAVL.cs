@@ -6,6 +6,8 @@ namespace LogicTree
 {
     public class PureLogicAVL
     {
+        
+        STModelo gamemanager = STModelo.Instance;
         // Insertar valor en árbol AVL y retornar nueva raíz
         public Nodo Insert(Nodo root, int value)
         {

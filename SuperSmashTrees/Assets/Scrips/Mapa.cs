@@ -123,7 +123,7 @@ public class PlatformSpawner : MonoBehaviour
 
         GameObject plataforma = Instantiate(plataformaPrefab, posicion, Quaternion.Euler(rotacion));
         plataforma.transform.localScale = escala;
-        AsignarMaterialAleatorio(plataforma);
+        
         return plataforma;
     }
 
@@ -155,7 +155,7 @@ public class PlatformSpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No se encontraron materiales en la carpeta especificada.");
+           
         }
     }
 }

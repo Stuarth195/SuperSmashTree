@@ -3,23 +3,24 @@ using System.Collections.Generic;
 
 namespace DLLForUnityStandart
 {
-    // Clase Nodo: representa cada elemento de la lista genérica
-    public class Nodo<T> // Nodo genérico
+    
+    // Clase NodoDll: representa cada elemento de la lista genérica
+    public class NodoDll<T> // NodoDll genérico
     {
-        public T dato; // Dato del nodo
-        public Nodo<T> siguiente; // Referencia al siguiente nodo
+        public T dato; // Dato del NodoDll
+        public NodoDll<T> siguiente; // Referencia al siguiente NodoDll
 
-        public Nodo(T valor) // Constructor del nodo
-        { 
+        public NodoDll(T valor) // Constructor del NodoDll
+        {
             dato = valor;     // Asigna el valor al dato
-            siguiente = null; // Inicializa el siguiente nodo como null
+            siguiente = null; // Inicializa el siguiente NodoDll como null
         }
     }
 
     // Clase ListaSimple: lista enlazada simple genérica
     public class ListaSimple<T>
     {
-        private Nodo<T> primero;
+        private NodoDll<T> primero;
 
         public ListaSimple()
         {
@@ -32,10 +33,10 @@ namespace DLLForUnityStandart
             AgregarFinal(valor);
         }
 
-        // Inserta un nodo al final de la lista
-        public void AgregarFinal(T valor)
+        // Inserta un NodoDll al final de la lista
+        public void AgregarFinal(T valor) 
         {
-            Nodo<T> nuevo = new Nodo<T>(valor);
+            NodoDll<T> nuevo = new NodoDll<T>(valor);
 
             if (primero == null)
             {
@@ -43,7 +44,7 @@ namespace DLLForUnityStandart
             }
             else
             {
-                Nodo<T> actual = primero;
+                NodoDll<T> actual = primero;
                 while (actual.siguiente != null)
                 {
                     actual = actual.siguiente;
@@ -56,7 +57,7 @@ namespace DLLForUnityStandart
         public List<T> Recorrer()
         {
             List<T> elementos = new List<T>();
-            Nodo<T> actual = primero;
+            NodoDll<T> actual = primero;
             while (actual != null)
             {
                 elementos.Add(actual.dato);
@@ -66,17 +67,21 @@ namespace DLLForUnityStandart
         }
 
         // Retorna el elemento en el índice especificado
-        public T ElementoEn(int indice)
+
+        public void ReemplazaEn(int indice, T nuevoValor)
         {
             if (indice < 0)
                 throw new ArgumentOutOfRangeException();
 
-            Nodo<T> actual = primero;
+            NodoDll<T> actual = primero;
             int i = 0;
             while (actual != null)
             {
                 if (i == indice)
-                    return actual.dato;
+                {
+                    actual.dato = nuevoValor;
+                    return;
+                }
                 actual = actual.siguiente;
                 i++;
             }
@@ -84,10 +89,30 @@ namespace DLLForUnityStandart
             throw new ArgumentOutOfRangeException("Índice fuera de rango.");
         }
 
+public T ElementoEn(int indice)
+{
+    if (indice < 0)
+        throw new ArgumentOutOfRangeException("Índice negativo no válido.");
+
+    NodoDll<T> actual = primero;
+    int i = 0;
+    while (actual != null)
+    {
+        if (i == indice)
+            return actual.dato; // Aquí devuelve el objeto Nodo completo
+        actual = actual.siguiente;
+        i++;
+    }
+
+    throw new ArgumentOutOfRangeException("Índice fuera de rango.");
+}
+
+
+
         // Devuelve el índice del primer elemento igual a 'valor'
         public int IndiceDe(T valor)
         {
-            Nodo<T> actual = primero;
+            NodoDll<T> actual = primero;
             int i = 0;
             while (actual != null)
             {
@@ -109,7 +134,7 @@ namespace DLLForUnityStandart
         public int Tamano()
         {
             int contador = 0;
-            Nodo<T> actual = primero;
+            NodoDll<T> actual = primero;
             while (actual != null)
             {
                 contador++;
@@ -124,7 +149,7 @@ namespace DLLForUnityStandart
             primero = null;
         }
 
-        // Elimina nodo en índice específico
+        // Elimina NodoDll en índice específico
         public void EliminarEn(int indice)
         {
             if (indice < 0 || EstaVacia())
@@ -136,7 +161,7 @@ namespace DLLForUnityStandart
                 return;
             }
 
-            Nodo<T> actual = primero;
+            NodoDll<T> actual = primero;
             int i = 0;
 
             while (actual != null && i < indice - 1)
@@ -151,7 +176,7 @@ namespace DLLForUnityStandart
             actual.siguiente = actual.siguiente.siguiente;
         }
 
-        // Elimina el primer nodo con el valor especificado
+        // Elimina el primer NodoDll con el valor especificado
         public bool EliminarElemento(T valor)
         {
             if (EstaVacia()) return false;
@@ -162,7 +187,7 @@ namespace DLLForUnityStandart
                 return true;
             }
 
-            Nodo<T> actual = primero;
+            NodoDll<T> actual = primero;
             while (actual.siguiente != null)
             {
                 if (actual.siguiente.dato.Equals(valor))
@@ -181,8 +206,8 @@ namespace DLLForUnityStandart
     // Lista ejecutable cm colas 
     public class Cola<T>
     {
-        private Nodo<T> frente;
-        private Nodo<T> fin;
+        private NodoDll<T> frente;
+        private NodoDll<T> fin;
 
         public Cola()
         {
@@ -197,7 +222,7 @@ namespace DLLForUnityStandart
 
         public void Encolar(T valor)
         {
-            Nodo<T> nuevo = new Nodo<T>(valor);
+            NodoDll<T> nuevo = new NodoDll<T>(valor);
             if (EstaVacia())
             {
                 frente = nuevo;
@@ -237,7 +262,7 @@ namespace DLLForUnityStandart
 
     public class Pila<T>
     {
-        private Nodo<T> tope;
+        private NodoDll<T> tope;
 
         public Pila()
         {
@@ -251,7 +276,7 @@ namespace DLLForUnityStandart
 
         public void Apilar(T valor)
         {
-            Nodo<T> nuevo = new Nodo<T>(valor);
+            NodoDll<T> nuevo = new NodoDll<T>(valor);
             nuevo.siguiente = tope;
             tope = nuevo;
         }
@@ -276,14 +301,14 @@ namespace DLLForUnityStandart
     }
 
     
-    // Nodo para lista doblemente enlazada
-    public class NodoDoble<T>
+    // NodoDll para lista doblemente enlazada
+    public class NodoDllDoble<T>
     {
         public T dato;
-        public NodoDoble<T> siguiente;
-        public NodoDoble<T> anterior;
+        public NodoDllDoble<T> siguiente;
+        public NodoDllDoble<T> anterior;
 
-        public NodoDoble(T valor)
+        public NodoDllDoble(T valor)
         {
             dato = valor;
             siguiente = null;
@@ -294,8 +319,8 @@ namespace DLLForUnityStandart
     // Lista doblemente enlazada genérica
     public class ListaDoble<T>
     {
-        private NodoDoble<T> cabeza;
-        private NodoDoble<T> cola;
+        private NodoDllDoble<T> cabeza;
+        private NodoDllDoble<T> cola;
 
         public ListaDoble()
         {
@@ -310,7 +335,7 @@ namespace DLLForUnityStandart
 
         public void AgregarAlFinal(T valor)
         {
-            NodoDoble<T> nuevo = new NodoDoble<T>(valor);
+            NodoDllDoble<T> nuevo = new NodoDllDoble<T>(valor);
             if (EstaVacia())
             {
                 cabeza = nuevo;
@@ -326,7 +351,7 @@ namespace DLLForUnityStandart
 
         public void AgregarAlInicio(T valor)
         {
-            NodoDoble<T> nuevo = new NodoDoble<T>(valor);
+            NodoDllDoble<T> nuevo = new NodoDllDoble<T>(valor);
             if (EstaVacia())
             {
                 cabeza = nuevo;
@@ -342,7 +367,7 @@ namespace DLLForUnityStandart
 
         public bool Eliminar(T valor)
         {
-            NodoDoble<T> actual = cabeza;
+            NodoDllDoble<T> actual = cabeza;
             while (actual != null)
             {
                 if (actual.dato.Equals(valor))
@@ -367,7 +392,7 @@ namespace DLLForUnityStandart
         public int Tamano()
         {
             int contador = 0;
-            NodoDoble<T> actual = cabeza;
+            NodoDllDoble<T> actual = cabeza;
             while (actual != null)
             {
                 contador++;
@@ -381,7 +406,7 @@ namespace DLLForUnityStandart
             if (indice < 0)
                 throw new ArgumentOutOfRangeException();
 
-            NodoDoble<T> actual = cabeza;
+            NodoDllDoble<T> actual = cabeza;
             int i = 0;
             while (actual != null)
             {
@@ -400,13 +425,15 @@ namespace DLLForUnityStandart
             cola = null;
         }
     }
-    // Nodo para Array Dinámico
-    public class NodoArray<T>
+ 
+ 
+    // NodoDll para Array Dinámico
+    public class NodoDllArray<T>
     {
         public T dato;
-        public NodoArray<T> siguiente;
+        public NodoDllArray<T> siguiente;
 
-        public NodoArray(T valor)
+        public NodoDllArray(T valor)
         {
             dato = valor;
             siguiente = null;
@@ -415,7 +442,7 @@ namespace DLLForUnityStandart
     // Clase Array Dinámico
     public class ArrayDinamico<T>
     {
-        private NodoArray<T> primero;
+        private NodoDllArray<T> primero;
         private int contador;
 
         public ArrayDinamico()
@@ -431,14 +458,14 @@ namespace DLLForUnityStandart
 
         public void Agregar(T valor)
         {
-            NodoArray<T> nuevo = new NodoArray<T>(valor);
+            NodoDllArray<T> nuevo = new NodoDllArray<T>(valor);
             if (primero == null)
             {
                 primero = nuevo;
             }
             else
             {
-                NodoArray<T> actual = primero;
+                NodoDllArray<T> actual = primero;
                 while (actual.siguiente != null)
                     actual = actual.siguiente;
                 actual.siguiente = nuevo;
@@ -451,7 +478,7 @@ namespace DLLForUnityStandart
             if (indice < 0 || indice >= contador)
                 throw new ArgumentOutOfRangeException();
 
-            NodoArray<T> actual = primero;
+            NodoDllArray<T> actual = primero;
             int i = 0;
             while (actual != null)
             {
@@ -471,14 +498,14 @@ namespace DLLForUnityStandart
         }
     }
 
-    // Nodo pera Diccionario
-    public class NodoDiccionario<K, V>
+    // NodoDll pera Diccionario
+    public class NodoDllDiccionario<K, V>
     {
         public K clave;
         public V valor;
-        public NodoDiccionario<K, V> siguiente;
+        public NodoDllDiccionario<K, V> siguiente;
 
-        public NodoDiccionario(K c, V v)
+        public NodoDllDiccionario(K c, V v)
         {
             clave = c;
             valor = v;
@@ -488,7 +515,7 @@ namespace DLLForUnityStandart
     // Clase Diccionario
     public class Diccionario<K, V>
     {
-        private NodoDiccionario<K, V> primero;
+        private NodoDllDiccionario<K, V> primero;
 
         public Diccionario()
         {
@@ -497,7 +524,7 @@ namespace DLLForUnityStandart
 
         public void AgregarOActualizar(K clave, V valor)
         {
-            NodoDiccionario<K, V> actual = primero;
+            NodoDllDiccionario<K, V> actual = primero;
             while (actual != null)
             {
                 if (actual.clave.Equals(clave))
@@ -508,14 +535,14 @@ namespace DLLForUnityStandart
                 actual = actual.siguiente;
             }
 
-            NodoDiccionario<K, V> nuevo = new NodoDiccionario<K, V>(clave, valor);
+            NodoDllDiccionario<K, V> nuevo = new NodoDllDiccionario<K, V>(clave, valor);
             nuevo.siguiente = primero;
             primero = nuevo;
         }
 
         public V Obtener(K clave)
         {
-            NodoDiccionario<K, V> actual = primero;
+            NodoDllDiccionario<K, V> actual = primero;
             while (actual != null)
             {
                 if (actual.clave.Equals(clave))
@@ -527,8 +554,8 @@ namespace DLLForUnityStandart
 
         public bool Eliminar(K clave)
         {
-            NodoDiccionario<K, V> actual = primero;
-            NodoDiccionario<K, V> anterior = null;
+            NodoDllDiccionario<K, V> actual = primero;
+            NodoDllDiccionario<K, V> anterior = null;
 
             while (actual != null)
             {
@@ -548,7 +575,7 @@ namespace DLLForUnityStandart
 
         public bool ContieneClave(K clave)
         {
-            NodoDiccionario<K, V> actual = primero;
+            NodoDllDiccionario<K, V> actual = primero;
             while (actual != null)
             {
                 if (actual.clave.Equals(clave))
