@@ -86,7 +86,7 @@ public class ReaparecerPorCaida : MonoBehaviour
         mensajeUI = textGO.AddComponent<Text>();
 
         // Estilo del texto
-        mensajeUI.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        mensajeUI.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         mensajeUI.fontSize = 24;
         mensajeUI.alignment = TextAnchor.MiddleCenter;
         mensajeUI.color = Color.white;

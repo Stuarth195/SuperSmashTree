@@ -55,6 +55,15 @@ public class Player : MonoBehaviour
     public Animator animator;
     public Rigidbody rb;
 
+    // Poderes
+    private int doubleJumpCharges = 1;
+    private int punchCharges = 1;
+    private int shieldCharges = 1;
+
+    private bool isShieldActive = false;
+    private float shieldDuration = 2f;
+    private float shieldTimer = 0f;
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -90,11 +99,11 @@ public class Player : MonoBehaviour
         //TwinStickMovement();
 
         //PlayerRelativeMovement();
-        
+
 
         //Attention: this movement requires the physics player prefab in Main > player input manager > player prefab
         //PhysicsMovement();
-        
+
 
         //basic example of controlling an animated character 
         //with information from the character controller
@@ -126,8 +135,28 @@ public class Player : MonoBehaviour
                 animator.Play("Idle");
             }
         }
+
+        if (isShieldActive)
+        {
+            shieldTimer -= Time.deltaTime;
+            if (shieldTimer <= 0)
+            {
+                isShieldActive = false;
+                Debug.Log("Escudo desactivado");
+                // Aquí puedes desactivar el efecto visual de escudo
+            }
+        }
     }
-    
+
+    public void RechargePower(string power)
+    {
+        switch (power)
+        {
+            case "DoubleJump": doubleJumpCharges = 1; break;
+            case "Punch": punchCharges = 1; break;
+            case "Shield": shieldCharges = 1; break;
+        }
+    }
 
     void PhysicsMovement()
     {
@@ -154,9 +183,9 @@ public class Player : MonoBehaviour
 
         Vector3 directionRelativeMovement = transform.rotation * movement;
 
-        
+
         rb.AddForce(directionRelativeMovement * Time.deltaTime);
-        
+
         rb.AddTorque(transform.up * rightStick.x * rotationSpeed * Time.deltaTime * PhysicsMovementTorque);
 
         //physics body doesn't know if it's grounded so I have to do a raycast down
@@ -179,38 +208,40 @@ public class Player : MonoBehaviour
         jumpedThisFrame = false;
     }
 
-    
+
+
+
 
     //left stick determines the movement, character faces the direction
-void SingleStickMovement()
-{
-    float targetSpeed = movementSpeed;
-
-    if (sprinting)
+    void SingleStickMovement()
     {
-        targetSpeed = sprintSpeed;
+        float targetSpeed = movementSpeed;
+
+        if (sprinting)
+        {
+            targetSpeed = sprintSpeed;
+        }
+
+        verticalVelocity += gravity * Time.deltaTime;
+
+        if (controller.isGrounded && jumpedThisFrame)
+        {
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
+        // Movimiento solo en eje X
+        Vector3 movement = new Vector3(leftStick.x * targetSpeed, verticalVelocity, 0); // Bloquea Z
+
+        controller.Move(movement * Time.deltaTime);
+
+        if (leftStick.magnitude > 0.1f)
+        {
+            Vector3 lookDirection = new Vector3(leftStick.x, 0, 0); // También bloquea rotación en Z
+            transform.rotation = Quaternion.LookRotation(lookDirection);
+        }
+
+        jumpedThisFrame = false;
     }
-
-    verticalVelocity += gravity * Time.deltaTime;
-
-    if (controller.isGrounded && jumpedThisFrame)
-    {
-        verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
-    }
-
-    // Movimiento solo en eje X
-    Vector3 movement = new Vector3(leftStick.x * targetSpeed, verticalVelocity, 0); // Bloquea Z
-
-    controller.Move(movement * Time.deltaTime);
-
-    if (leftStick.magnitude > 0.1f)
-    {
-        Vector3 lookDirection = new Vector3(leftStick.x, 0, 0); // También bloquea rotación en Z
-        transform.rotation = Quaternion.LookRotation(lookDirection);
-    }
-
-    jumpedThisFrame = false;
-}
 
     //left stick controls thrust, right direction based on the player orientation, think vehicle control in 3d person
     void PlayerRelativeMovement()
@@ -400,6 +431,53 @@ void SingleStickMovement()
     {
         jumpedThisFrame = true;
     }
-    
 
+    // Doble salto
+    public void OnDoubleJump()
+    {
+        if (doubleJumpCharges > 0 && !controller.isGrounded)
+        {
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            doubleJumpCharges--;
+            Debug.Log("¡Doble salto!");
+        }
+    }
+
+    // Puñetazo
+    public void OnPunch()
+    {
+        if (punchCharges > 0)
+        {
+            float punchRange = 2f;
+            float punchForce = 10f;
+            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, punchRange);
+            foreach (var hit in hits)
+            {
+                if (hit.gameObject != this.gameObject && hit.TryGetComponent<Player>(out Player other))
+                {
+                    if (!other.isShieldActive)
+                    {
+                        if (other.rb == null) other.rb = other.GetComponent<Rigidbody>();
+                        if (other.rb != null)
+                            other.rb.AddForce(transform.forward * punchForce, ForceMode.Impulse);
+                    }
+                }
+            }
+            punchCharges--;
+            Debug.Log("¡Golpe!");
+        }
+    }
+
+    // Escudo
+    public void OnShield()
+    {
+        if (shieldCharges > 0 && !isShieldActive)
+        {
+            isShieldActive = true;
+            shieldTimer = shieldDuration;
+            shieldCharges--;
+            Debug.Log("¡Escudo activado!");
+            // Aquí puedes activar un efecto visual de escudo
+        }
+    }
 }
