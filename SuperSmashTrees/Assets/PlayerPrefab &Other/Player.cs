@@ -55,6 +55,72 @@ public class Player : MonoBehaviour
     public Animator animator;
     public Rigidbody rb;
 
+    // PODERES
+    private int doubleJumpCharges = 1;
+    private int punchCharges = 1;
+    private int shieldCharges = 1;
+
+    private bool isShieldActive = false;
+    private float shieldDuration = 5f; // 5 segundos de escudo
+    private float shieldTimer = 0f;
+
+    public void OnDoubleJump()
+    {
+        if (doubleJumpCharges > 0 && !controller.isGrounded)
+        {
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            doubleJumpCharges--;
+            Debug.Log($"{gameObject.name} usó doble salto");
+        }
+    }
+
+    public void OnPunch()
+    {
+        if (punchCharges > 0)
+        {
+            float punchRange = 2f; // Puedes ajustar este valor
+            float punchForce = 10f; // Puedes ajustar este valor
+            bool golpeoAAlguien = false;
+
+            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, punchRange);
+            foreach (var hit in hits)
+            {
+                if (hit.gameObject != this.gameObject && hit.TryGetComponent<Player>(out Player other))
+                {
+                    golpeoAAlguien = true;
+                    if (!other.isShieldActive)
+                    {
+                        if (other.rb == null) other.rb = other.GetComponent<Rigidbody>();
+                        if (other.rb != null)
+                            other.rb.AddForce(transform.forward * punchForce, ForceMode.Impulse);
+                        Debug.Log($"{gameObject.name} empujó a {other.gameObject.name}");
+                    }
+                    else
+                    {
+                        Debug.Log($"{other.gameObject.name} bloqueó el golpe con su escudo");
+                    }
+                }
+            }
+            if (!golpeoAAlguien)
+                Debug.Log($"{gameObject.name} usó golpe, pero no había nadie cerca");
+
+            punchCharges--;
+            Debug.Log($"{gameObject.name} ejecutó golpe");
+        }
+    }
+
+    public void OnShield()
+    {
+        if (shieldCharges > 0 && !isShieldActive)
+        {
+            isShieldActive = true;
+            shieldTimer = shieldDuration;
+            shieldCharges--;
+            Debug.Log($"{gameObject.name} activó el escudo");
+            // Aquí puedes activar un efecto visual de escudo
+        }
+    }
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -90,11 +156,11 @@ public class Player : MonoBehaviour
         //TwinStickMovement();
 
         //PlayerRelativeMovement();
-        
+
 
         //Attention: this movement requires the physics player prefab in Main > player input manager > player prefab
         //PhysicsMovement();
-        
+
 
         //basic example of controlling an animated character 
         //with information from the character controller
@@ -126,6 +192,25 @@ public class Player : MonoBehaviour
                 animator.Play("Idle");
             }
         }
+        
+        if (isShieldActive)
+        {
+            shieldTimer -= Time.deltaTime;
+            if (shieldTimer <= 0)
+            {
+                isShieldActive = false;
+                Debug.Log($"{gameObject.name} desactivó el escudo");
+                // Aquí puedes desactivar el efecto visual de escudo
+            }
+        }
+    }
+
+    public void RecargarPoderes()
+    {
+        doubleJumpCharges = 1;
+        punchCharges = 1;
+        shieldCharges = 1;
+        Debug.Log($"{gameObject.name} recargó todos sus poderes");
     }
     
 

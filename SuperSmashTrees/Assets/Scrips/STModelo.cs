@@ -222,14 +222,26 @@ public class STModelo : MonoBehaviour
             }
         }
         // Validar si cumplió el reto
-        if (VerifyChallenge(playerIndex, nodoJugador))
+        // Validar si cumplió el reto
+    if (VerifyChallenge(playerIndex, nodoJugador))
         {
             try
             {
+                // Recargar poderes al jugador que completó el reto
+                string tagJugador = playertags.ElementoEn(playerIndex);
+                GameObject jugadorGO = GameObject.FindGameObjectWithTag(tagJugador);
+                if (jugadorGO != null)
+                {
+                    Player playerScript = jugadorGO.GetComponent<Player>();
+                    if (playerScript != null)
+                    {
+                        playerScript.RecargarPoderes();
+                    }
+                }
+
                 ResetTrees();
                 CrearEspacioListas();
                 GenerateChallenge();
-
             }
             catch (Exception ex)
             {
