@@ -2,21 +2,18 @@ using UnityEngine;
 
 public class ImagenAleatoria3D : MonoBehaviour
 {
-    [Header("Objeto 3D al que se cambiará la textura (ej: cubo)")]
-    public GameObject objetoDestino;
+    public GameObject objetoDestino; // El cubo u objeto 3D
 
-    [Header("Carpeta dentro de Resources (ej: 'Fondos')")]
-    public string carpeta = "Fondos";
+    public string carpeta = "Fondos"; // Carpeta en Resources donde están las imágenes
 
     void Start()
     {
         if (objetoDestino == null)
         {
-            Debug.LogError("No se ha asignado ningún objeto.");
+            Debug.LogError("No has asignado el objetoDestino en el inspector.");
             return;
         }
 
-        // Carga todas las texturas dentro de Resources/carpeta
         Texture2D[] texturas = Resources.LoadAll<Texture2D>(carpeta);
 
         if (texturas.Length == 0)
@@ -25,18 +22,17 @@ public class ImagenAleatoria3D : MonoBehaviour
             return;
         }
 
-        // Selecciona una textura aleatoria
-        Texture2D texturaSeleccionada = texturas[Random.Range(0, texturas.Length)];
+        Texture2D texturaAleatoria = texturas[Random.Range(0, texturas.Length)];
 
-        // Asignar textura al material del objeto
         Renderer renderer = objetoDestino.GetComponent<Renderer>();
+
         if (renderer != null)
         {
-            renderer.material.mainTexture = texturaSeleccionada;
+            renderer.material.mainTexture = texturaAleatoria;
         }
         else
         {
-            Debug.LogError("El objeto no tiene un Renderer.");
+            Debug.LogError("El objeto no tiene Renderer.");
         }
     }
 }

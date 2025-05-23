@@ -1,103 +1,122 @@
 using UnityEngine;
+using TMPro;
 using Nodos;
+using DLLForUnityStandart;
 
-public class TreeVisualizer : MonoBehaviour
+namespace VisualizerTree
 {
-    public TreeNodeFactory nodeFactory; // Referencia al prefab y creación de nodos
-    public float horizontalSpacing = 3f;
-    public float verticalSpacing = 2f;
-
-
-    private Transform nodesParent;
-
-    private void Awake()
+    public class TreeVisualizer : MonoBehaviour
     {
-        // Crea un contenedor para todos los nodos visuales
-        GameObject container = new GameObject("VisualizedNodes");
-        nodesParent = container.transform;
+        [Header("Configuraci\u00f3n Visual")]
+        public GameObject nodoPrefab;
+        public float espaciadoHorizontal = 2f;
+        public float espaciadoVertical = 1.5f;
+        public float espacioEntreArboles = 5f;
 
-        // Asegúrate de que el contenedor esté en la escena activa
-        nodesParent.SetParent(this.transform, false);
+        [Header("Posiciones Iniciales (por jugador)")]
+        public Vector3 posicionJugador1 = new Vector3(-5f, -4f, 0f);
+        public Vector3 posicionJugador2 = new Vector3(0f, -4f, 0f);
+        public Vector3 posicionJugador3 = new Vector3(5f, -4f, 0f);
 
-        // Establece la posición inicial del contenedor
-        nodesParent.position = new Vector3(0, 5, 0); // Cambia esta posición según sea necesario
-    }
-    /// <summary>
-    /// Visualiza el árbol completo dado su nodo raíz.
-    /// </summary>
-    public void VisualizeTree(Nodo root)
-    {
-        // Limpia la escena de visualizaciones anteriores
-        foreach (Transform child in nodesParent)
+        private Diccionario<int, ListaSimple<GameObject>> arbolesInstanciados = new Diccionario<int, ListaSimple<GameObject>>();
+        private Cola<GameObject> colaLineas = new Cola<GameObject>();
+
+        public void GraficarArbol(Nodo raiz, int jugador)
         {
-            Destroy(child.gameObject);
+            EliminarArbol(jugador);
+
+            Vector3 posicionInicial = CalcularPosicionInicial(jugador);
+
+            if (raiz != null)
+            {
+                ListaSimple<GameObject> objetos = new ListaSimple<GameObject>();
+                CalcularYInstanciar(raiz, posicionInicial, 0, objetos);
+                arbolesInstanciados.AgregarOActualizar(jugador, objetos);
+            }
         }
 
-        if (root != null)
+        private void CalcularYInstanciar(Nodo nodo, Vector3 posicion, int nivel, ListaSimple<GameObject> objetos)
         {
-            VisualizeRecursive(root, Vector3.zero, 0, 0);
-        }
-    }
+            if (nodo == null) return;
 
-    /// <summary>
-    /// Método recursivo para visualizar cada nodo.
-    /// </summary>
-    private void VisualizeRecursive(Nodo node, Vector3 position, int depth, int direction)
-    {
-        if (node == null) return;
+            GameObject nuevoNodo = Instantiate(nodoPrefab, posicion, Quaternion.identity, transform);
+            nuevoNodo.GetComponentInChildren<TextMeshPro>().text = nodo.value.ToString();
+            objetos.Insertar(nuevoNodo);
 
-        // Calcula la posición horizontal basada en la profundidad
-        float offset = horizontalSpacing * Mathf.Pow(0.5f, depth);
+            float offsetX = espaciadoHorizontal / (nivel + 1);
+            Vector3 posIzq = posicion + new Vector3(-offsetX, -espaciadoVertical, 0);
+            Vector3 posDer = posicion + new Vector3(offsetX, -espaciadoVertical, 0);
 
-        // Ajusta la posición en X dependiendo si es hijo izquierdo o derecho
-        position.x += direction * offset;
-        position.y = -depth * verticalSpacing;
+            if (nodo.Left != null)
+            {
+                DibujarLinea(posicion, posIzq);
+                CalcularYInstanciar(nodo.Left, posIzq, nivel + 1, objetos);
+            }
 
-        // Crea el nodo visual
-        GameObject nodeVisual = nodeFactory.CreateTreeNode(position, node.value);
-
-        nodeVisual.transform.SetParent(nodesParent, false);
-
-        // Dibuja la rama hacia el hijo izquierdo
-        if (node.Left != null)
-        {
-            Vector3 leftPos = position + new Vector3(-offset, -verticalSpacing, 0);
-            DrawLine(position, leftPos);
-            VisualizeRecursive(node.Left, leftPos, depth + 1, -1);
+            if (nodo.Right != null)
+            {
+                DibujarLinea(posicion, posDer);
+                CalcularYInstanciar(nodo.Right, posDer, nivel + 1, objetos);
+            }
         }
 
-        // Dibuja la rama hacia el hijo derecho
-        if (node.Right != null)
+        private void DibujarLinea(Vector3 inicio, Vector3 fin)
         {
-            Vector3 rightPos = position + new Vector3(offset, -verticalSpacing, 0);
-            DrawLine(position, rightPos);
-            VisualizeRecursive(node.Right, rightPos, depth + 1, 1);
+            GameObject linea = new GameObject("Linea");
+            linea.transform.SetParent(transform);
+
+            LineRenderer lr = linea.AddComponent<LineRenderer>();
+            lr.startWidth = 0.1f;
+            lr.endWidth = 0.1f;
+            lr.material = new Material(Shader.Find("Standard")) { color = Color.gray };
+            lr.SetPositions(new Vector3[] { inicio, fin });
+
+            colaLineas.Encolar(linea);
         }
-    }
 
-    /// <summary>
-    /// Dibuja una línea entre dos puntos usando un LineRenderer.
-    /// </summary>
-    private void DrawLine(Vector3 start, Vector3 end)
-    {
-        GameObject lineObj = new GameObject("Line");
-        lineObj.transform.SetParent(nodesParent, false);
-        LineRenderer line = lineObj.AddComponent<LineRenderer>();
-        line.material = new Material(Shader.Find("Sprites/Default"));
-        line.widthMultiplier = 0.05f;
-        line.positionCount = 2;
-        line.SetPosition(0, start);
-        line.SetPosition(1, end);
-        line.startColor = Color.black;
-        line.endColor = Color.black;
-    }
-
-    public void ClearVisualization()
-    {
-        // Elimina todos los objetos hijos del visualizador (nodos y líneas)
-        foreach (Transform child in transform)
+        public void EliminarArbol(int jugador)
         {
-            Destroy(child.gameObject);
+            if (arbolesInstanciados.ContieneClave(jugador))
+            {
+                ListaSimple<GameObject> objetos = arbolesInstanciados.Obtener(jugador);
+                while (!objetos.EstaVacia())
+                {
+                    Destroy(objetos.ElementoEn(0));
+                    objetos.EliminarEn(0);
+                }
+                arbolesInstanciados.Eliminar(jugador);
+            }
+
+            while (!colaLineas.EstaVacia())
+            {
+                Destroy(colaLineas.Desencolar());
+            }
+        }
+
+        public void EliminarTodosLosArboles()
+        {
+            ListaSimple<int> jugadores = new ListaSimple<int>();
+            foreach (var key in arbolesInstanciados.RecorrerClaves())
+            {
+                jugadores.Insertar(key);
+            }
+
+            while (!jugadores.EstaVacia())
+            {
+                EliminarArbol(jugadores.ElementoEn(0));
+                jugadores.EliminarEn(0);
+            }
+        }
+
+        private Vector3 CalcularPosicionInicial(int jugador)
+        {
+            switch (jugador)
+            {
+                case 1: return posicionJugador1;
+                case 2: return posicionJugador2;
+                case 3: return posicionJugador3;
+                default: return transform.position;
+            }
         }
     }
 }

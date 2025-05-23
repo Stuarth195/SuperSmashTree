@@ -6,6 +6,8 @@ using LogicTree;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using VisualizerTree;
+
 public class STModelo : MonoBehaviour
 
 {
@@ -31,8 +33,12 @@ public class STModelo : MonoBehaviour
 
     // string de los retos
     public string Reto;
+    public int contadornodosagregados = 0;
+    public int contadorretos = 0;
 
     public int NivelReto;
+    public TreeVisualizer TreeVisualizer; // asigna en el Inspector
+
 
     public string MensajeDelReto;
 
@@ -47,6 +53,7 @@ public class STModelo : MonoBehaviour
 
     private LogicTree.PureLogicBST pureLogicBST;
     private LogicTree.PureLogicAVL pureLogicAVL;
+    
 
 
 
@@ -64,17 +71,27 @@ public class STModelo : MonoBehaviour
         MensajeDelReto = $"Haz un árbol {Reto} de {NivelReto} niveles";
         Debug.Log($"Nuevo desafío: {MensajeDelReto}");
     }
-    private bool VerifyChallenge(int playerIndex)
+    private bool VerifyChallenge(int playerIndex, Nodo nodo)
     {
-        int NivelRetoActual = ListaNodos.ElementoEn(playerIndex).Height;
-        if (NivelRetoActual ==  NivelReto)
-            Debug.LogWarning("RETO COMPLETADO ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅");
+        int NivelRetoActual = GetHeight(nodo);
+        if (NivelRetoActual == NivelReto)
+        {
+            Debug.LogWarning($"{contadorretos}RETO COMPLETADO por player{playerIndex +1} ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅");
+            contadorretos += 1;
+            ListaNodos.Limpiar();
+            CrearEspacioListas();
+            return true;
+        }
 
-        return NivelRetoActual == NivelReto; 
+        return false; 
     }
     private void ResetTrees()
     {
-            ListaNodos.Limpiar();
+        ListaNodos.Limpiar();
+        if (TreeVisualizer != null)
+            {
+                TreeVisualizer.EliminarTodosLosArboles();
+            }
     }
     public int PlayerNum(string tag)
 
@@ -96,14 +113,27 @@ public class STModelo : MonoBehaviour
         return number - 1;
     }
 
+    public int GetHeight(Nodo raiz)
+        {
+            if (raiz == null)
+                return 0;
+
+            int izquierda = GetHeight(raiz.Left);
+            int derecha = GetHeight(raiz.Right);
+
+            return 1 + (izquierda > derecha ? izquierda : derecha);
+        }
+
+
+
     // AL COLICIONAR CON UNA ESFERA
-public void RecibirColision(int playerIndex, int numEsfera)
-{
-     Debug.LogWarning($"Obtuve {playerIndex}    {numEsfera}  ");
-    Nodo nodoJugador = ListaNodos.ElementoEn(playerIndex);
-    Debug.LogWarning($"Obtuve {playerIndex}    {numEsfera} {nodoJugador.value} ");
-       
-    // Si aún no hay árbol para el jugador, lo creamos y lo asignamos
+    public void RecibirColision(int playerIndex, int numEsfera)
+    {
+        Debug.LogWarning($"Obtuve {playerIndex}    {numEsfera}  ");
+        Nodo nodoJugador = ListaNodos.ElementoEn(playerIndex);
+        Debug.LogWarning($"Obtuve del jugador {playerIndex}   el numero {numEsfera} a la raiz {nodoJugador.value} ");
+
+        // Si aún no hay árbol para el jugador, lo creamos y lo asignamos
         if (nodoJugador == null)
         {
             Debug.LogWarning($"primer caso  ");
@@ -113,10 +143,18 @@ public void RecibirColision(int playerIndex, int numEsfera)
                 if (playerIndex < ListaNodos.Tamano())
                 {
                     ListaNodos.ReemplazaEn(playerIndex, nodoJugador);
+                    if (TreeVisualizer != null)
+                    {
+                        TreeVisualizer.GraficarArbol(nodoJugador, playerIndex + 1);
+                    }
                 }
                 else
                 {
                     ListaNodos.AgregarFinal(nodoJugador);
+                    if (TreeVisualizer != null)
+                        {
+                            TreeVisualizer.GraficarArbol(nodoJugador, playerIndex + 1);
+                        }
 
                 }
             }
@@ -125,45 +163,80 @@ public void RecibirColision(int playerIndex, int numEsfera)
                 Debug.LogError("Algo salió mal al agregar el nodo: " + ex.Message);
             }
         }
-
-    try
-    {
-            if (Reto == "AVL")
+        if (nodoJugador.value == 0)
+        {
+            Debug.LogWarning($"{nodoJugador.value} como raiz ");
+            try
             {
-                nodoJugador = pureLogicAVL.Insert(nodoJugador, numEsfera);
-                
-                Debug.LogWarning($"se inserto {nodoJugador} con logica AVL");
+                nodoJugador = new Nodo(numEsfera);
+                // 🔁 Reemplazamos la nueva raíz del árbol en la lista
+                ListaNodos.ReemplazaEn(playerIndex, nodoJugador);
+                Debug.LogWarning($"{numEsfera}  se metio como raiz ");
+                if (TreeVisualizer != null)
+                    {
+                        TreeVisualizer.GraficarArbol(nodoJugador, playerIndex + 1);
+                    }
             }
-            else if (Reto == "BST")
+            catch (Exception ex)
             {
-                nodoJugador = pureLogicBST.Insert(nodoJugador, numEsfera);
-                Debug.LogWarning($"se inserto {nodoJugador} con logita BST");
+                Debug.LogWarning($"{numEsfera} no se metio como raiz {ex}");
             }
 
-        // 🔁 Reemplazamos la nueva raíz del árbol en la lista
-        ListaNodos.ReemplazaEn(playerIndex, nodoJugador);
-    }
-    catch (Exception ex)
-    {
-        Debug.LogWarning($"Error al insertar {numEsfera}: {ex.Message}");
-    }
+        }
+        else
+        {
+            try
+            {
+                if (Reto == "AVL")
+                {
+                    nodoJugador = pureLogicAVL.Insert(nodoJugador, numEsfera);
 
-    // Validar si cumplió el reto
-    if (VerifyChallenge(playerIndex))
-    {
+
+                    Debug.LogWarning($"se inserto {nodoJugador} con logica AVL{contadornodosagregados} QUEDO DE TAMANO {GetHeight(nodoJugador)}");
+                    contadornodosagregados += 1;
+                    if (TreeVisualizer != null)
+                    {
+                        TreeVisualizer.GraficarArbol(nodoJugador, playerIndex + 1);
+                    }
+                }
+                else if (Reto == "BST")
+                {
+                    nodoJugador = pureLogicBST.Insert(nodoJugador, numEsfera);
+                    
+                    Debug.LogWarning($"se inserto {nodoJugador} con logita BST{contadornodosagregados} QUEDO DE TAMANO {GetHeight(nodoJugador)}");
+                    if (TreeVisualizer != null)
+                        {
+                            TreeVisualizer.GraficarArbol(nodoJugador, playerIndex + 1);
+                        }
+                    contadornodosagregados += 1;
+                }
+
+                // 🔁 Reemplazamos la nueva raíz del árbol en la lista
+                ListaNodos.ReemplazaEn(playerIndex, nodoJugador);
+
+
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Error al insertar {numEsfera}: {ex.Message}");
+            }
+        }
+        // Validar si cumplió el reto
+        if (VerifyChallenge(playerIndex, nodoJugador))
+        {
             try
             {
                 ResetTrees();
                 CrearEspacioListas();
                 GenerateChallenge();
-                
-        }
+
+            }
             catch (Exception ex)
             {
                 Debug.LogError("Error al generar nuevo reto: " + ex.Message);
             }
+        }
     }
-}
 
     public void StartGameButon()
     {
@@ -181,6 +254,7 @@ public void RecibirColision(int playerIndex, int numEsfera)
         {
             Nodo nodoJugador = new Nodo();
             ListaNodos.AgregarFinal(nodoJugador);
+            Debug.LogWarning($"{ListaNodos.Tamano()}");
         }
     }
 
@@ -231,6 +305,7 @@ public void RecibirColision(int playerIndex, int numEsfera)
         // Inicializa la lista de nodos
         pureLogicAVL = new PureLogicAVL();
         pureLogicBST = new PureLogicBST();
+        TreeVisualizer = GameObject.Find("TreeVisualizerGO").GetComponent<TreeVisualizer>();
 
 
     }

@@ -513,78 +513,58 @@ public T ElementoEn(int indice)
         }
     }
     // Clase Diccionario
-    public class Diccionario<K, V>
+
+
+public class Diccionario<K, V>
+{
+    private List<K> claves = new List<K>();
+    private List<V> valores = new List<V>();
+
+    public void AgregarOActualizar(K clave, V valor)
     {
-        private NodoDllDiccionario<K, V> primero;
-
-        public Diccionario()
+        int index = claves.IndexOf(clave);
+        if (index >= 0)
         {
-            primero = null;
+            valores[index] = valor;
         }
-
-        public void AgregarOActualizar(K clave, V valor)
+        else
         {
-            NodoDllDiccionario<K, V> actual = primero;
-            while (actual != null)
-            {
-                if (actual.clave.Equals(clave))
-                {
-                    actual.valor = valor;
-                    return;
-                }
-                actual = actual.siguiente;
-            }
-
-            NodoDllDiccionario<K, V> nuevo = new NodoDllDiccionario<K, V>(clave, valor);
-            nuevo.siguiente = primero;
-            primero = nuevo;
-        }
-
-        public V Obtener(K clave)
-        {
-            NodoDllDiccionario<K, V> actual = primero;
-            while (actual != null)
-            {
-                if (actual.clave.Equals(clave))
-                    return actual.valor;
-                actual = actual.siguiente;
-            }
-            throw new KeyNotFoundException("Clave no encontrada.");
-        }
-
-        public bool Eliminar(K clave)
-        {
-            NodoDllDiccionario<K, V> actual = primero;
-            NodoDllDiccionario<K, V> anterior = null;
-
-            while (actual != null)
-            {
-                if (actual.clave.Equals(clave))
-                {
-                    if (anterior == null)
-                        primero = actual.siguiente;
-                    else
-                        anterior.siguiente = actual.siguiente;
-                    return true;
-                }
-                anterior = actual;
-                actual = actual.siguiente;
-            }
-            return false;
-        }
-
-        public bool ContieneClave(K clave)
-        {
-            NodoDllDiccionario<K, V> actual = primero;
-            while (actual != null)
-            {
-                if (actual.clave.Equals(clave))
-                    return true;
-                actual = actual.siguiente;
-            }
-            return false;
+            claves.Add(clave);
+            valores.Add(valor);
         }
     }
+
+    public bool ContieneClave(K clave)
+    {
+        return claves.Contains(clave);
+    }
+
+    public V Obtener(K clave)
+    {
+        int index = claves.IndexOf(clave);
+        if (index >= 0)
+            return valores[index];
+        throw new KeyNotFoundException();
+    }
+
+    public void Eliminar(K clave)
+    {
+        int index = claves.IndexOf(clave);
+        if (index >= 0)
+        {
+            claves.RemoveAt(index);
+            valores.RemoveAt(index);
+        }
+    }
+
+    public IEnumerable<K> RecorrerClaves()
+    {
+        foreach (K clave in claves)
+        {
+            yield return clave;
+        }
+    }
+}
 
 
 }
