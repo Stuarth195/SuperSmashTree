@@ -647,7 +647,7 @@ Transform:
   m_GameObject: {fileID: 879057012}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.70089746, y: 5.546111, z: -2.1044745}
+  m_LocalPosition: {x: 0.70089746, y: -98, z: -2.1044745}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -666,12 +666,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodoPrefab: {fileID: 3296931093946868469, guid: b2e3a542834cc714a802e2387006add7, type: 3}
-  espaciadoHorizontal: 70
-  espaciadoVertical: 70
+  espaciadoHorizontal: 80
+  espaciadoVertical: 50
   espacioEntreArboles: 100
-  posicionJugador1: {x: -400, y: 250, z: 440}
-  posicionJugador2: {x: 1, y: 250, z: 440}
-  posicionJugador3: {x: 400, y: 250, z: 440}
+  posicionJugador1: {x: -400, y: -100, z: 440}
+  posicionJugador2: {x: 1, y: -100, z: 440}
+  posicionJugador3: {x: 400, y: -100, z: 440}
 --- !u!1 &1022094090 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2765075023489016845, guid: 687dbafc2b84b2846b9a4a7a7dae2a7e, type: 3}

@@ -74,36 +74,50 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void OnPunch()
+        public void OnPunch()
     {
         if (punchCharges > 0)
         {
             float punchRange = 2f; // Puedes ajustar este valor
             float punchForce = 10f; // Puedes ajustar este valor
             bool golpeoAAlguien = false;
-
-            Collider[] hits = Physics.OverlapSphere(transform.position + transform.forward, punchRange);
+    
+            // Usar un SphereCast para detectar jugadores en la dirección en la que mira el jugador
+            RaycastHit[] hits = Physics.SphereCastAll(
+                transform.position + Vector3.up, // origen (ligeramente arriba para evitar el suelo)
+                0.7f,                            // radio del "puño"
+                transform.forward,               // dirección del golpe
+                punchRange                       // distancia máxima
+            );
+    
             foreach (var hit in hits)
             {
-                if (hit.gameObject != this.gameObject && hit.TryGetComponent<Player>(out Player other))
+                if (hit.collider != null && hit.collider.gameObject != this.gameObject)
                 {
-                    golpeoAAlguien = true;
-                    if (!other.isShieldActive)
+                    Player other = hit.collider.GetComponent<Player>();
+                    if (other != null)
                     {
-                        if (other.rb == null) other.rb = other.GetComponent<Rigidbody>();
-                        if (other.rb != null)
-                            other.rb.AddForce(transform.forward * punchForce, ForceMode.Impulse);
-                        Debug.Log($"{gameObject.name} empujó a {other.gameObject.name}");
-                    }
-                    else
-                    {
-                        Debug.Log($"{other.gameObject.name} bloqueó el golpe con su escudo");
+                        golpeoAAlguien = true;
+                        if (!other.isShieldActive)
+                        {
+                            if (other.rb == null) other.rb = other.GetComponent<Rigidbody>();
+                            if (other.rb != null)
+                            {
+                                // Empuja al jugador golpeado hacia la dirección en la que mira el que da el golpe
+                                other.rb.AddForce(transform.forward * punchForce, ForceMode.Impulse);
+                            }
+                            Debug.Log($"{gameObject.name} empujó a {other.gameObject.name}");
+                        }
+                        else
+                        {
+                            Debug.Log($"{other.gameObject.name} bloqueó el golpe con su escudo");
+                        }
                     }
                 }
             }
             if (!golpeoAAlguien)
                 Debug.Log($"{gameObject.name} usó golpe, pero no había nadie cerca");
-
+    
             punchCharges--;
             Debug.Log($"{gameObject.name} ejecutó golpe");
         }
