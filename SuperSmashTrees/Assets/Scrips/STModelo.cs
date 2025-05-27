@@ -326,15 +326,7 @@ public class STModelo : MonoBehaviour
     // se llama cada frame
    
 
-void Update()
-{
-    if (Input.GetKeyDown(KeyCode.M))
-    {
-            // Aquí va tu lógica personalizada
-            StartGameButon();
-        Debug.Log("Se presionó la tecla M");
-    }
-}
+
 
 
 
