@@ -31,6 +31,19 @@ public class Player : MonoBehaviour
     public float PhysicsJumpForce = 10;
 
 
+
+
+    public GameObject escudoPrefab;
+    public Transform puntoDeEscudo; // Un Empty en el frente del jugador
+    public float distanciaEscudo = 1.2f;
+    private GameObject escudoInstanciado;
+
+
+    public GameObject golpePrefab; // Asigna esto en el inspector
+    public Transform puntoDeGolpe; // Un empty al frente del personaje
+    public float fuerzaDelGolpe = 10f;
+
+
     //the analog values read from the controller
     public Vector2 leftStick = Vector2.zero;
     public Vector2 rightStick = Vector2.zero;
@@ -74,69 +87,54 @@ public class Player : MonoBehaviour
         }
     }
 
-        public void OnPunch()
+public void OnPunch()
+{
+    if (punchCharges > 0)
     {
-        if (punchCharges > 0)
-        {
-            float punchRange = 2f; // Puedes ajustar este valor
-            float punchForce = 10f; // Puedes ajustar este valor
-            bool golpeoAAlguien = false;
-    
-            // Usar un SphereCast para detectar jugadores en la dirección en la que mira el jugador
-            RaycastHit[] hits = Physics.SphereCastAll(
-                transform.position + Vector3.up, // origen (ligeramente arriba para evitar el suelo)
-                0.7f,                            // radio del "puño"
-                transform.forward,               // dirección del golpe
-                punchRange                       // distancia máxima
-            );
-    
-            foreach (var hit in hits)
-            {
-                if (hit.collider != null && hit.collider.gameObject != this.gameObject)
-                {
-                    Player other = hit.collider.GetComponent<Player>();
-                    if (other != null)
-                    {
-                        golpeoAAlguien = true;
-                        if (!other.isShieldActive)
-                        {
-                            if (other.rb == null) other.rb = other.GetComponent<Rigidbody>();
-                            if (other.rb != null)
-                            {
-                                // Empuja al jugador golpeado hacia la dirección en la que mira el que da el golpe
-                                other.rb.AddForce(transform.forward * punchForce, ForceMode.Impulse);
-                            }
-                            Debug.Log($"{gameObject.name} empujó a {other.gameObject.name}");
-                        }
-                        else
-                        {
-                            Debug.Log($"{other.gameObject.name} bloqueó el golpe con su escudo");
-                        }
-                    }
-                }
-            }
-            if (!golpeoAAlguien)
-                Debug.Log($"{gameObject.name} usó golpe, pero no había nadie cerca");
-    
-            punchCharges--;
-            Debug.Log($"{gameObject.name} ejecutó golpe");
-        }
-    }
+        GameObject golpe = Instantiate(golpePrefab, puntoDeGolpe.position, Quaternion.identity);
+        
+        // Usa la dirección hacia donde mira el jugador (su frente real)
+        Vector3 direccionFrente = transform.forward; 
+        golpe.GetComponent<Golpe>().SetDireccion(direccionFrente);
 
-    public void OnShield()
-    {
-        if (shieldCharges > 0 && !isShieldActive)
-        {
-            isShieldActive = true;
-            shieldTimer = shieldDuration;
-            shieldCharges--;
-            Debug.Log($"{gameObject.name} activó el escudo");
-            // Aquí puedes activar un efecto visual de escudo
-        }
+        punchCharges--;
     }
+}
+
+ public void OnShield()
+{
+    if (escudoInstanciado == null && shieldCharges > 0)
+    {
+        // Dirección real al frente del jugador
+        Vector3 direccionFrente = transform.forward;
+
+        // Posición frente al jugador
+        Vector3 posicionEscudo = transform.position + direccionFrente * distanciaEscudo;
+
+        // Instanciar el escudo
+        escudoInstanciado = Instantiate(escudoPrefab, posicionEscudo, Quaternion.identity);
+
+        // Asegurar que tenga el tag correcto
+        escudoInstanciado.tag = "Escudo";
+
+        // Alinear el escudo con la dirección del jugador
+        escudoInstanciado.transform.forward = direccionFrente;
+
+        // Hacer que siga al jugador
+        escudoInstanciado.transform.SetParent(transform);
+
+        // Destruir luego de 2 segundos
+        Destroy(escudoInstanciado, 2f);
+
+        // Gastar una carga
+        shieldCharges--;
+    }
+}
 
     private void Start()
     {
+        if (rb == null) rb = GetComponent<Rigidbody>();
+
         controller = GetComponent<CharacterController>();
 
         //find the "brain" and notify it of the new player

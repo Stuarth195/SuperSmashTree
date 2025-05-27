@@ -13,6 +13,7 @@ TagManager:
   - Limite
   - A
   - Plataforma
+  - Escudo
   layers:
   - Default
   - TransparentFX

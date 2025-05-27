@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5758703561530835277}
   - component: {fileID: 2520227913134952096}
-  - component: {fileID: 4368796939844199323}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -101,20 +100,3 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &4368796939844199323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3232213134468053473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b24856617990be448fa9ffadc2c29fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pim: {fileID: 0}
-  mainCamera: {fileID: 0}
-  players: []
-  A_COLOR: {r: 0.7924528, g: 0, b: 0, a: 1}
-  B_COLOR: {r: 0, g: 0.45470548, b: 1, a: 1}
