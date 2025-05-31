@@ -4,10 +4,12 @@ using DLLForUnityStandart;
 using System;
 using LogicTree;    
 using Random = UnityEngine.Random;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using VisualizerTree;
 using texteditor;
+using TMPro;
+using System.Collections;
+
+
 public class STModelo : MonoBehaviour
 
 {
@@ -27,6 +29,7 @@ public class STModelo : MonoBehaviour
     /// </summary>
 
     public bool OnGame = true;
+    public  TMP_Text mensajes;
 
     //cantidad de jugadores
     public int NumPlayer;
@@ -96,6 +99,7 @@ public class STModelo : MonoBehaviour
             string MensajePuntosTXT = $"el jugador {playerIndex + 1}: {listapuntos.ElementoEn(playerIndex)}";
             TxtWriter.EscribirEnLinea(MensajePuntosTXT , playerIndex);
             Debug.LogWarning($"player {playerIndex + 1} tiene {listapuntos.ElementoEn(playerIndex)} puntos ");
+          // Reemplaza 3 por los segundos que necesites
             ListaNodos.Limpiar();
             CrearEspacioListas();
             
@@ -104,6 +108,10 @@ public class STModelo : MonoBehaviour
         }
 
         return false; 
+    }
+       private IEnumerator CountdownCoroutine(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
     }
     private void ResetTrees()
     {
@@ -360,9 +368,54 @@ public class STModelo : MonoBehaviour
 
     // Actualiza el juego
     // se llama cada frame
-   
 
 
+    public void PuntosPorCaida(int index)
+    {
+        int num1;
+        int num2;
+        string MensajePuntosTXT;
+        if (index == 0)
+        {
+
+            num1 = listapuntos.ElementoEn(1) + 25;
+            num2 = listapuntos.ElementoEn(2) + 25;
+
+            listapuntos.ReemplazaEn(1, num1);
+            listapuntos.ReemplazaEn(2, num2);
+            TxtWriter.EscribirEnLinea($"El jugador1 {listapuntos.ElementoEn(1)}", 1);
+            TxtWriter.EscribirEnLinea($"El jugador3 {listapuntos.ElementoEn(2)}", 2);
+        }
+        else if (index == 1)
+        {
+            num1 = listapuntos.ElementoEn(0) + 25;
+            MensajePuntosTXT = $"El jugador1 {listapuntos.ElementoEn(0)}";
+            num2 = listapuntos.ElementoEn(2) + 25;
+            MensajePuntosTXT = $"El jugador3 {listapuntos.ElementoEn(2)}";
+
+            listapuntos.ReemplazaEn(0, num1);
+            TxtWriter.EscribirEnLinea($"El jugador1 {listapuntos.ElementoEn(0)}", 0);
+            listapuntos.ReemplazaEn(2, num2);
+            TxtWriter.EscribirEnLinea($"El jugador3 {listapuntos.ElementoEn(2)}", 2);
+        }
+        else
+        {
+            num1 = listapuntos.ElementoEn(0) + 25;
+            num2 = listapuntos.ElementoEn(1) + 25;
+
+            listapuntos.ReemplazaEn(0, num1);
+            MensajePuntosTXT = $"El jugador1 {listapuntos.ElementoEn(0)}";
+            listapuntos.ReemplazaEn(1, num2);
+            TxtWriter.EscribirEnLinea($"El jugador1 {listapuntos.ElementoEn(0)}", 0);
+            TxtWriter.EscribirEnLinea($"El jugador3 {listapuntos.ElementoEn(1)}", 1);
+
+        }
+       
+        
+        string elem = $" ➕ player{index + 1} se cayo y otorgo puntos a otros jugadore ";
+
+        Debug.LogWarning(elem);
+    }
 
 
 

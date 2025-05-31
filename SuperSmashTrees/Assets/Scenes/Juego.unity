@@ -231,6 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnGame: 0
+  mensajes: {fileID: 0}
   NumPlayer: 0
   Reto: 
   contadornodosagregados: 0

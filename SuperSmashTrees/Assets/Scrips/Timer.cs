@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement; // <-- Agrega esto
 
+
 public class Timer : MonoBehaviour
 {
     [SerializeField] private TMP_Text timerText;

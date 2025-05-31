@@ -1,9 +1,15 @@
 using UnityEngine;
 using System.Collections;
+using texteditor;
+
 
 public class ReaparecerPorCaida : MonoBehaviour
 {
     [Header("Configuración de caída")]
+    STModelo GameManager;
+    
+    public string tagDelObjeto; // Almacena el tag del objeto
+
     public float alturaMinimaY = -10f;
     public float tiempoDeEspera = 3f;
     public float alturaRespawnY = 2f;
@@ -19,6 +25,8 @@ public class ReaparecerPorCaida : MonoBehaviour
 
     void Start()
     {
+        GameManager = STModelo.Instance;
+        tagDelObjeto = gameObject.tag;
         rb = GetComponent<Rigidbody>();
         controladorMovimiento = GetComponent<Player>(); // Cambia esto si tu clase de movimiento tiene otro nombre
     }
@@ -35,6 +43,9 @@ public class ReaparecerPorCaida : MonoBehaviour
     {
         estaReapareciendo = true;
 
+        int num = GameManager.PlayerNum(tagDelObjeto);
+
+        GameManager.PuntosPorCaida(num);
         yield return new WaitForSeconds(tiempoDeEspera);
 
         // Reubicar al jugador
