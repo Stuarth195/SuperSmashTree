@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using VisualizerTree;
-
+using texteditor;
 public class STModelo : MonoBehaviour
 
 {
@@ -16,7 +16,7 @@ public class STModelo : MonoBehaviour
     /// instancia del singleton
     /// <summary>
     public static STModelo Instance { get; private set; }
-
+    private EditorDeLineas TxtWriter;
     /// <summary>  ___________________________________________________________ Variables _____________________________________________________________________
     /// se inicio el juego?
     /// contididad de jugadores
@@ -44,6 +44,7 @@ public class STModelo : MonoBehaviour
 
     // lista de tags de los jugadores
     public ListaSimple<string> playertags;
+    public ListaSimple<int> listapuntos;
 
     // Lista de esferas
     public ListaSimple<Nodo> ListaNodos;
@@ -78,8 +79,27 @@ public class STModelo : MonoBehaviour
         {
             Debug.LogWarning($"{contadorretos}RETO COMPLETADO por player{playerIndex +1} ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅");
             contadorretos += 1;
+           
+            int num = 0;
+            if (Reto == "AVL")
+            {
+                num += NivelReto * 200;
+            }
+            else
+            {
+                 num += NivelReto * 100;
+            }
+
+            int puntosactual = listapuntos.ElementoEn(playerIndex);
+            int suma = puntosactual + num;
+            listapuntos.ReemplazaEn(playerIndex, suma);
+            string MensajePuntosTXT = $"el jugador {playerIndex + 1}: {listapuntos.ElementoEn(playerIndex)}";
+            TxtWriter.EscribirEnLinea(MensajePuntosTXT , playerIndex);
+            Debug.LogWarning($"player {playerIndex + 1} tiene {listapuntos.ElementoEn(playerIndex)} puntos ");
             ListaNodos.Limpiar();
             CrearEspacioListas();
+            
+            
             return true;
         }
 
@@ -93,7 +113,7 @@ public class STModelo : MonoBehaviour
                 TreeVisualizer.EliminarTodosLosArboles();
             }
     }
-    public int PlayerNum(string tag)
+    public int PlayerNum(string tag) 
 
     {
         if (!tag.StartsWith("Player"))
@@ -300,7 +320,23 @@ public class STModelo : MonoBehaviour
     void Start()
     {
         // Inicializa la lista de tags de jugadores
+        TxtWriter = new EditorDeLineas();
+        TxtWriter.EscribirEnLinea("Player1: 100 1st ", 0 );
+        Debug.LogWarning("Contenido:\n" + TxtWriter.LeerTodo());
+        //TxtWriter.SetPuntaje(0, "200");
+        string lem = TxtWriter.ObtenerPuntaje(0);
+        Debug.LogWarning( $"a" + lem);
+        listapuntos = new ListaSimple<int>();
+        listapuntos.Limpiar();
+        for (int i = 0; i < 4; i++)
+        {
+            listapuntos.AgregarFinal(0);
+        }
+        Debug.LogWarning(listapuntos.ElementoEn(0));
+        Debug.LogWarning(listapuntos.ElementoEn(1));
+        Debug.LogWarning(listapuntos.ElementoEn(2));
         playertags = new ListaSimple<string>();
+        playertags.Limpiar();
         playertags.AgregarFinal("Player1");
         playertags.AgregarFinal("Player2");
         playertags.AgregarFinal("Player3");
